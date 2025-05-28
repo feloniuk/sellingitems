@@ -1,0 +1,35 @@
+{% block selling_items_category_detail %}
+    <sw-page class="selling-items-category-detail">
+        <template #smart-bar-header>
+            <h2>{{ item ? item.name : '' }}</h2>
+        </template>
+
+        <template #smart-bar-actions>
+            <sw-button-process
+                :isLoading="isLoading"
+                :processSuccess="processSuccess"
+                variant="primary"
+                @process-finish="saveFinish"
+                @click="onClickSave">
+                {{ $tc('selling-items-category.detail.buttonSave') }}
+            </sw-button-process>
+        </template>
+
+        <template #content>
+            <sw-card-view>
+                <sw-card v-if="item" :isLoading="isLoading">
+                    <sw-field 
+                        v-model="item.name"
+                        :label="$tc('selling-items-category.detail.nameLabel')"
+                        required>
+                    </sw-field>
+
+                    <sw-switch-field
+                        v-model="item.active"
+                        :label="$tc('selling-items-category.detail.activeLabel')">
+                    </sw-switch-field>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}
