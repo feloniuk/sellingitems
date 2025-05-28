@@ -1,0 +1,20 @@
+{
+    "selling-items-category": {
+        "general": {
+            "mainMenuItemGeneral": "Selling Items Categories",
+            "descriptionTextModule": "Manage selling items categories"
+        },
+        "list": {
+            "textTitle": "Categories",
+            "buttonAddCategory": "Add Category",
+            "columnName": "Name",
+            "columnActive": "Active"
+        },
+        "detail": {
+            "buttonSave": "Save",
+            "errorTitle": "Error",
+            "nameLabel": "Name",
+            "activeLabel": "Active"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "name": "custom/selling-items",
+    "description": "Selling Items Plugin",
+    "type": "shopware-platform-plugin",
+    "version": "v1.0.0",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Your Company"
+        }
+    ],
+    "require": {
+        "shopware/core": "^6.5.0",
+        "shopware/administration": "^6.5.0",
+        "shopware/storefront": "^6.5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SellingItems\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "SellingItems\\SellingItems",
+        "plugin-icon": "src/Resources/config/plugin.png",
+        "label": {
+            "de-DE": "Selling Items",
+            "en-GB": "Selling Items"
+        }
+    }
+}

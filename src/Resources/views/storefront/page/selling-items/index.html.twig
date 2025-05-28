@@ -1,0 +1,68 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_content %}
+    <div class="selling-items-page">
+        <div class="container">
+            <h1>Selling Items</h1>
+            
+            {% if categories.total > 0 %}
+                <div class="selling-items-filters mb-4">
+                    <div class="btn-group" role="group">
+                        <a href="{{ path('frontend.selling-items.index') }}" 
+                           class="btn btn-secondary{% if not selectedCategory %} active{% endif %}">
+                            All Categories
+                        </a>
+                        {% for category in categories %}
+                            <a href="{{ path('frontend.selling-items.index', { category: category.id }) }}" 
+                               class="btn btn-secondary{% if selectedCategory == category.id %} active{% endif %}">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="selling-items-grid">
+                <div class="row">
+                    {% for item in items %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card selling-item-card">
+                                {% if item.mainImage %}
+                                    <img src="{{ item.mainImage.url }}" 
+                                         class="card-img-top" 
+                                         alt="{{ item.title }}">
+                                {% endif %}
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ item.title }}</h5>
+                                    
+                                    {% if item.subtitle %}
+                                        <p class="card-subtitle mb-2 text-muted">{{ item.subtitle }}</p>
+                                    {% endif %}
+                                    
+                                    {% if item.category %}
+                                        <p class="card-text">
+                                            <small class="text-muted">Category: {{ item.category.name }}</small>
+                                        </p>
+                                    {% endif %}
+                                    
+                                    {% if item.link %}
+                                        <a href="{{ item.link }}" 
+                                           class="btn btn-primary" 
+                                           target="_blank">
+                                            View Details
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-12">
+                            <p>No items found.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
