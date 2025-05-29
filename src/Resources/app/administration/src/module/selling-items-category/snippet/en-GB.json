@@ -13,6 +13,8 @@
         "detail": {
             "buttonSave": "Save",
             "errorTitle": "Error",
+            "successTitle": "Success", 
+            "successMessage": "Category has been saved successfully",
             "nameLabel": "Name",
             "activeLabel": "Active"
         }

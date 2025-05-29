@@ -15,6 +15,10 @@ Component.extend('selling-items-create', 'selling-items-detail', {
                 .then(() => {
                     this.isLoading = false;
                     this.$router.push({ name: 'selling.items.detail', params: { id: this.item.id } });
+                    this.createNotificationSuccess({
+                        title: this.$tc('selling-items.detail.successTitle'),
+                        message: this.$tc('selling-items.detail.successMessage')
+                    });
                 }).catch((exception) => {
                     this.isLoading = false;
                     this.createNotificationError({

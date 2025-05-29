@@ -12,15 +12,15 @@ class SellingItemEntity extends Entity
     use EntityIdTrait;
 
     protected string $categoryId;
-    protected ?string $mainImageId;
-    protected ?string $previewImageId;
+    protected ?string $mainImageId = null;
+    protected ?string $previewImageId = null;
     protected string $title;
-    protected ?string $subtitle;
-    protected ?string $link;
-    protected bool $active;
-    protected ?SellingItemCategoryEntity $category;
-    protected ?MediaEntity $mainImage;
-    protected ?MediaEntity $previewImage;
+    protected ?string $subtitle = null;
+    protected ?string $link = null;
+    protected bool $active = true;
+    protected ?SellingItemCategoryEntity $category = null;
+    protected ?MediaEntity $mainImage = null;
+    protected ?MediaEntity $previewImage = null;
 
     public function getCategoryId(): string
     {

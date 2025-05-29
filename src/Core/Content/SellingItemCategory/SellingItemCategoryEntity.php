@@ -11,8 +11,8 @@ class SellingItemCategoryEntity extends Entity
     use EntityIdTrait;
 
     protected string $name;
-    protected bool $active;
-    protected ?SellingItemCollection $sellingItems;
+    protected bool $active = true;
+    protected ?SellingItemCollection $sellingItems = null;
 
     public function getName(): string
     {
@@ -39,7 +39,7 @@ class SellingItemCategoryEntity extends Entity
         return $this->sellingItems;
     }
 
-    public function setSellingItems(SellingItemCollection $sellingItems): void
+    public function setSellingItems(?SellingItemCollection $sellingItems): void
     {
         $this->sellingItems = $sellingItems;
     }

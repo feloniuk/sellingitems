@@ -48,6 +48,10 @@ Component.register('selling-items-detail', {
 
     methods: {
         getItem() {
+            if (!this.$route.params.id) {
+                return;
+            }
+
             const criteria = new Criteria();
             criteria.addAssociation('category');
             criteria.addAssociation('mainImage');

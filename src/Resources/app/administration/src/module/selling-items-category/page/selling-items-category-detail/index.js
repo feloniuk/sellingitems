@@ -1,7 +1,6 @@
 import template from './selling-items-category-detail.html.twig';
 
 const { Component, Mixin } = Shopware;
-const { Criteria } = Shopware.Data;
 
 Component.register('selling-items-category-detail', {
     template,
@@ -36,11 +35,12 @@ Component.register('selling-items-category-detail', {
 
     methods: {
         getItem() {
-            const criteria = new Criteria();
-            criteria.addAssociation('sellingItems');
+            if (!this.$route.params.id) {
+                return;
+            }
 
             this.repository
-                .get(this.$route.params.id, Shopware.Context.api, criteria)
+                .get(this.$route.params.id, Shopware.Context.api)
                 .then((entity) => {
                     this.item = entity;
                 });

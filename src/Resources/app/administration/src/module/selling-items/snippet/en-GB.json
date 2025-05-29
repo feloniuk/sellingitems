@@ -15,6 +15,8 @@
         "detail": {
             "buttonSave": "Save",
             "errorTitle": "Error",
+            "successTitle": "Success",
+            "successMessage": "Item has been saved successfully",
             "titleLabel": "Title",
             "subtitleLabel": "Subtitle",
             "linkLabel": "Link",

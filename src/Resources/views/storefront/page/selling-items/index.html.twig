@@ -1,63 +1,91 @@
 {% sw_extends '@Storefront/storefront/base.html.twig' %}
 
 {% block base_content %}
-    <div class="selling-items-page">
-        <div class="container">
-            <h1>Selling Items</h1>
-            
-            {% if categories.total > 0 %}
-                <div class="selling-items-filters mb-4">
-                    <div class="btn-group" role="group">
-                        <a href="{{ path('frontend.selling-items.index') }}" 
-                           class="btn btn-secondary{% if not selectedCategory %} active{% endif %}">
-                            All Categories
-                        </a>
-                        {% for category in categories %}
-                            <a href="{{ path('frontend.selling-items.index', { category: category.id }) }}" 
-                               class="btn btn-secondary{% if selectedCategory == category.id %} active{% endif %}">
-                                {{ category.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
+<div class="dressing-room-page">
+    <div class="dressing-room-container">
+        <!-- Welcome Title -->
+        <div class="welcome-header">
+            <h1>Welcome in <span class="highlight">Dressing Room</span></h1>
+        </div>
 
-            <div class="selling-items-grid">
-                <div class="row">
+        <div class="dressing-room-content">
+            <!-- Left Side - Character Display -->
+            <div class="character-section">
+                <h2>Your Character</h2>
+                
+                <div class="character-display">
+                    <div class="character-avatar">
+                        {% if selectedItem and selectedItem.mainImage %}
+                            <img src="{{ selectedItem.mainImage.url }}" alt="{{ selectedItem.title }}" class="main-character-image">
+                        {% else %}
+                            <div class="default-character">
+                                <img src="/bundles/storefront/assets/icon/default/avatar.svg" alt="Default Character">
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if selectedItem %}
+                        <div class="add-to-cart-section">
+                            <button class="add-to-cart-btn">
+                                Add to Cart<br>
+                                <span class="price">€{{ selectedItem.price|number_format(2, '.', ',') }}</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Side - Wardrobe Catalog -->
+            <div class="wardrobe-section">
+                <div class="wardrobe-header">
+                    <span class="wardrobe-label">Wardrobe</span>
+                    <span class="catalog-label">Catalog</span>
+                </div>
+
+                <!-- Category Filter Tabs -->
+                <div class="category-tabs">
+                    <div class="tab-filters">
+                        <button class="filter-tab{% if not selectedCategory %} active{% endif %}" 
+                                onclick="filterByCategory(null)">T-mog Name</button>
+                        <button class="filter-tab" onclick="filterByCategory('type')">Type</button>
+                        <button class="filter-tab" onclick="filterByCategory('rarity')">Rarity</button>
+                        <button class="filter-tab sort-btn" onclick="toggleSort()">
+                            Sort by Price <span class="sort-arrow">↓</span>
+                        </button>
+                    </div>
+
+                    <!-- Category buttons -->
+                    {% if categories.total > 0 %}
+                        <div class="category-buttons">
+                            {% for category in categories %}
+                                <button class="category-btn{% if selectedCategory == category.id %} active{% endif %}" 
+                                        onclick="filterByCategory('{{ category.id }}')">
+                                    {{ category.name }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Items Grid -->
+                <div class="items-grid">
                     {% for item in items %}
-                        <div class="col-md-4 mb-4">
-                            <div class="card selling-item-card">
-                                {% if item.mainImage %}
-                                    <img src="{{ item.mainImage.url }}" 
-                                         class="card-img-top" 
-                                         alt="{{ item.title }}">
+                        <div class="item-card" data-item-id="{{ item.id }}" onclick="selectItem('{{ item.id }}')">
+                            <div class="item-image">
+                                {% if item.previewImage %}
+                                    <img src="{{ item.previewImage.url }}" alt="{{ item.title }}">
                                 {% endif %}
-                                
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ item.title }}</h5>
-                                    
-                                    {% if item.subtitle %}
-                                        <p class="card-subtitle mb-2 text-muted">{{ item.subtitle }}</p>
-                                    {% endif %}
-                                    
-                                    {% if item.category %}
-                                        <p class="card-text">
-                                            <small class="text-muted">Category: {{ item.category.name }}</small>
-                                        </p>
-                                    {% endif %}
-                                    
-                                    {% if item.link %}
-                                        <a href="{{ item.link }}" 
-                                           class="btn btn-primary" 
-                                           target="_blank">
-                                            View Details
-                                        </a>
-                                    {% endif %}
-                                </div>
+                            </div>
+                            
+                            <div class="item-actions">
+                                <button class="try-on-btn">
+                                    Try it on<br>
+                                    <span class="item-price">€{{ item.price|number_format(2, '.', ',') }}</span>
+                                </button>
                             </div>
                         </div>
                     {% else %}
-                        <div class="col-12">
+                        <div class="no-items">
                             <p>No items found.</p>
                         </div>
                     {% endfor %}
@@ -65,4 +93,372 @@
             </div>
         </div>
     </div>
+</div>
+
+<style>
+.dressing-room-page {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    padding: 20px 0;
+}
+
+.dressing-room-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+
+.highlight {
+    color: #ff4757;
+}
+
+.dressing-room-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Character Section */
+.character-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #ddd;
+}
+
+.character-display {
+    text-align: center;
+}
+
+.character-avatar {
+    width: 300px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.main-character-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.default-character img {
+    width: 150px;
+    height: 200px;
+    opacity: 0.5;
+}
+
+.add-to-cart-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: #ff3742;
+    transform: translateY(-2px);
+}
+
+.price {
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Wardrobe Section */
+.wardrobe-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.wardrobe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.wardrobe-label, .catalog-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.catalog-label {
+    color: #ff4757;
+}
+
+/* Category Tabs */
+.category-tabs {
+    margin-bottom: 30px;
+}
+
+.tab-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-tab:hover, .filter-tab.active {
+    background: #ff4757;
+    border-color: #ff4757;
+    color: white;
+}
+
+.sort-btn .sort-arrow {
+    margin-left: 5px;
+    font-size: 0.8rem;
+}
+
+.category-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.category-btn:hover, .category-btn.active {
+    background: rgba(255, 71, 87, 0.3);
+    border-color: #ff4757;
+    color: white;
+}
+
+/* Items Grid */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.items-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.items-grid::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.items-grid::-webkit-scrollbar-thumb {
+    background: #ff4757;
+    border-radius: 4px;
+}
+
+.item-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 71, 87, 0.5);
+}
+
+.item-card.selected {
+    border-color: #ff4757;
+    background: rgba(255, 71, 87, 0.2);
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.item-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.try-on-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.try-on-btn:hover {
+    background: #ff3742;
+}
+
+.item-price {
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 3px;
+}
+
+.no-items {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dressing-room-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .character-avatar {
+        width: 250px;
+        height: 320px;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-header h1 {
+        font-size: 2rem;
+    }
+    
+    .tab-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 15px;
+    }
+    
+    .character-avatar {
+        width: 200px;
+        height: 250px;
+    }
+}
+</style>
+
+<script>
+let selectedItemId = null;
+let currentSort = 'asc';
+
+function selectItem(itemId) {
+    // Remove previous selection
+    document.querySelectorAll('.item-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selection to clicked item
+    const selectedCard = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+        selectedItemId = itemId;
+        
+        // Here you would typically make an AJAX call to get the full item data
+        // and update the character display
+        updateCharacterDisplay(itemId);
+    }
+}
+
+function filterByCategory(categoryId) {
+    let url = new URL(window.location);
+    if (categoryId) {
+        url.searchParams.set('category', categoryId);
+    } else {
+        url.searchParams.delete('category');
+    }
+    window.location.href = url.toString();
+}
+
+function toggleSort() {
+    currentSort = currentSort === 'asc' ? 'desc' : 'asc';
+    const arrow = document.querySelector('.sort-arrow');
+    arrow.textContent = currentSort === 'asc' ? '↓' : '↑';
+    
+    let url = new URL(window.location);
+    url.searchParams.set('sort', 'price');
+    url.searchParams.set('order', currentSort);
+    window.location.href = url.toString();
+}
+
+function updateCharacterDisplay(itemId) {
+    // This would typically fetch item data via AJAX and update the character
+    console.log('Updating character display with item:', itemId);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-select first item if available
+    const firstItem = document.querySelector('.item-card');
+    if (firstItem && !selectedItemId) {
+        const itemId = firstItem.getAttribute('data-item-id');
+        selectItem(itemId);
+    }
+});
+</script>
 {% endblock %}

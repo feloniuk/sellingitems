@@ -5,12 +5,14 @@ namespace SellingItems\Core\Content\SellingItem;
 use Shopware\Core\Content\Media\MediaDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\UpdatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use SellingItems\Core\Content\SellingItemCategory\SellingItemCategoryDefinition;
 
@@ -43,7 +45,9 @@ class SellingItemDefinition extends EntityDefinition
             (new StringField('title', 'title'))->addFlags(new Required()),
             new StringField('subtitle', 'subtitle'),
             new StringField('link', 'link'),
-            new BoolField('active', 'active'),
+            (new BoolField('active', 'active'))->addFlags(new Required()),
+            new CreatedAtField(),
+            new UpdatedAtField(),
             new ManyToOneAssociationField('category', 'category_id', SellingItemCategoryDefinition::class, 'id'),
             new ManyToOneAssociationField('mainImage', 'main_image_id', MediaDefinition::class, 'id'),
             new ManyToOneAssociationField('previewImage', 'preview_image_id', MediaDefinition::class, 'id'),
