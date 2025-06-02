@@ -10,6 +10,7 @@
             "columnTitle": "Title",
             "columnSubtitle": "Subtitle",
             "columnCategory": "Category",
+            "columnPrice": "Price",
             "columnActive": "Active"
         },
         "detail": {
@@ -20,6 +21,7 @@
             "titleLabel": "Title",
             "subtitleLabel": "Subtitle",
             "linkLabel": "Link",
+            "priceLabel": "Price (€)",
             "categoryLabel": "Category",
             "mainImageLabel": "Main Image",
             "previewImageLabel": "Preview Image",

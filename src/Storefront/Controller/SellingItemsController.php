@@ -34,16 +34,39 @@ class SellingItemsController extends StorefrontController
         $criteria->addAssociation('category');
         $criteria->addAssociation('mainImage');
         $criteria->addAssociation('previewImage');
-        $criteria->addSorting(new FieldSorting('createdAt', FieldSorting::DESCENDING));
 
+        // Category filtering
         $categoryId = $request->query->get('category');
         if ($categoryId) {
             $criteria->addFilter(new EqualsFilter('categoryId', $categoryId));
         }
 
+        // Sorting
+        $sortBy = $request->query->get('sort', 'createdAt');
+        $sortOrder = $request->query->get('order', 'desc');
+        
+        $sortDirection = strtolower($sortOrder) === 'asc' 
+            ? FieldSorting::ASCENDING 
+            : FieldSorting::DESCENDING;
+
+        switch ($sortBy) {
+            case 'price':
+                $criteria->addSorting(new FieldSorting('price', $sortDirection));
+                break;
+            case 'title':
+                $criteria->addSorting(new FieldSorting('title', $sortDirection));
+                break;
+            default:
+                $criteria->addSorting(new FieldSorting('createdAt', $sortDirection));
+                break;
+        }
+
+        // Limit results for performance
+        $criteria->setLimit(50);
+
         $items = $this->sellingItemRepository->search($criteria, $context->getContext());
 
-        // Получаем категории для фильтра
+        // Get categories for filter
         $categoryCriteria = new Criteria();
         $categoryCriteria->addFilter(new EqualsFilter('active', true));
         $categoryCriteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
@@ -53,7 +76,34 @@ class SellingItemsController extends StorefrontController
         return $this->renderStorefront('@SellingItems/storefront/page/selling-items/index.html.twig', [
             'items' => $items,
             'categories' => $categories,
-            'selectedCategory' => $categoryId
+            'selectedCategory' => $categoryId,
+            'currentSort' => $sortBy,
+            'currentOrder' => $sortOrder
+        ]);
+    }
+
+    #[Route(path: "/selling-items/api/item/{id}", name: "frontend.selling-items.api.item", methods: ["GET"])]
+    public function getItem(string $id, SalesChannelContext $context): Response
+    {
+        $criteria = new Criteria([$id]);
+        $criteria->addAssociation('category');
+        $criteria->addAssociation('mainImage');
+        $criteria->addAssociation('previewImage');
+
+        $item = $this->sellingItemRepository->search($criteria, $context->getContext())->first();
+
+        if (!$item) {
+            return $this->json(['error' => 'Item not found'], 404);
+        }
+
+        return $this->json([
+            'id' => $item->getId(),
+            'title' => $item->getTitle(),
+            'subtitle' => $item->getSubtitle(),
+            'price' => $item->getPrice(),
+            'mainImage' => $item->getMainImage() ? $item->getMainImage()->getUrl() : null,
+            'previewImage' => $item->getPreviewImage() ? $item->getPreviewImage()->getUrl() : null,
+            'category' => $item->getCategory() ? $item->getCategory()->getName() : null
         ]);
     }
 }

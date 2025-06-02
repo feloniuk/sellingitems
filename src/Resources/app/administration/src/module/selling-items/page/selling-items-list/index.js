@@ -46,6 +46,10 @@ Component.register('selling-items-list', {
                 dataIndex: 'subtitle',
                 label: 'selling-items.list.columnSubtitle'
             }, {
+                property: 'price',
+                dataIndex: 'price',
+                label: 'selling-items.list.columnPrice'
+            }, {
                 property: 'category.name',
                 dataIndex: 'category.name',
                 label: 'selling-items.list.columnCategory'

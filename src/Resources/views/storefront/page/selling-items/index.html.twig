@@ -13,82 +13,107 @@
             <div class="character-section">
                 <h2>Your Character</h2>
                 
+                <!-- Gender Selection -->
+                <div class="gender-selection">
+                    <button class="gender-btn" data-gender="male">
+                        <img src="/bundles/storefront/assets/icon/default/male-icon.svg" alt="Male">
+                    </button>
+                    <button class="gender-btn active" data-gender="female">
+                        <img src="/bundles/storefront/assets/icon/default/female-icon.svg" alt="Female">
+                    </button>
+                    <span class="gender-label active-gender">Female</span>
+                    <span class="race-label">Human</span>
+                </div>
+                
                 <div class="character-display">
                     <div class="character-avatar">
-                        {% if selectedItem and selectedItem.mainImage %}
-                            <img src="{{ selectedItem.mainImage.url }}" alt="{{ selectedItem.title }}" class="main-character-image">
-                        {% else %}
-                            <div class="default-character">
-                                <img src="/bundles/storefront/assets/icon/default/avatar.svg" alt="Default Character">
-                            </div>
-                        {% endif %}
+                        <div class="character-model" id="characterModel">
+                            <!-- Base character will be displayed here -->
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNTBDMTIwIDUwIDEzNSA2NSAxMzUgODVTMTIwIDEyMCAxMDAgMTIwUzY1IDEwNSA2NSA4NVM4MCA1MCAxMDAgNTBaIiBmaWxsPSIjZmZkYmFjIi8+CjxyZWN0IHg9Ijc1IiB5PSIxMjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzMzMzMzMyIvPgo8cmVjdCB4PSI3MCIgeT0iMjAwIiB3aWR0aD0iNjAiIGhlaWdodD0iODAiIGZpbGw9IiM2NjY2NjYiLz4KPHJlY3QgeD0iNjAiIHk9IjI4MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMzMzMzMzIi8+CjxyZWN0IHg9IjExMCIgeT0iMjgwIiB3aWR0aD0iMzAiIGhlaWdodD0iMjAiIGZpbGw9IiMzMzMzMzMiLz4KPC9zdmc+" alt="Default Character" class="base-character">
+                        </div>
                     </div>
                     
-                    {% if selectedItem %}
-                        <div class="add-to-cart-section">
-                            <button class="add-to-cart-btn">
-                                Add to Cart<br>
-                                <span class="price">€{{ selectedItem.price|number_format(2, '.', ',') }}</span>
-                            </button>
+                    <div class="add-to-cart-section">
+                        <button class="add-to-cart-btn" id="addToCartBtn" disabled>
+                            Add to Cart<br>
+                            <span class="price" id="itemPrice">€11.85</span>
+                        </button>
+                    </div>
+
+                    <!-- Character Controls Sidebar -->
+                    <div class="character-controls">
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SDwvdGV4dD48L3N2Zz4=" alt="Head">
                         </div>
-                    {% endif %}
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QzwvdGV4dD48L3N2Zz4=" alt="Chest">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TDwvdGV4dD48L3N2Zz4=" alt="Legs">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RjwvdGV4dD48L3N2Zz4=" alt="Feet">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RzwvdGV4dD48L3N2Zz4=" alt="Gloves">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SzwvdGV4dD48L3N2Zz4=" alt="Knife">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UzwvdGV4dD48L3N2Zz4=" alt="Shield">
+                        </div>
+                        <div class="control-item">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiNmZmYiPjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzY2NiIvPjx0ZXh0IHg9IjE2IiB5PSIyMCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VzwvdGV4dD48L3N2Zz4=" alt="Weapon">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Right Side - Wardrobe Catalog -->
             <div class="wardrobe-section">
                 <div class="wardrobe-header">
-                    <span class="wardrobe-label">Wardrobe</span>
-                    <span class="catalog-label">Catalog</span>
+                    <div class="header-labels">
+                        <span class="catalog-label">Catalog</span>
+                        <span class="wardrobe-label">MmonsteR <span class="highlight">Wardrobe</span></span>
+                    </div>
                 </div>
 
-                <!-- Category Filter Tabs -->
-                <div class="category-tabs">
-                    <div class="tab-filters">
-                        <button class="filter-tab{% if not selectedCategory %} active{% endif %}" 
-                                onclick="filterByCategory(null)">T-mog Name</button>
-                        <button class="filter-tab" onclick="filterByCategory('type')">Type</button>
-                        <button class="filter-tab" onclick="filterByCategory('rarity')">Rarity</button>
-                        <button class="filter-tab sort-btn" onclick="toggleSort()">
-                            Sort by Price <span class="sort-arrow">↓</span>
-                        </button>
-                    </div>
-
-                    <!-- Category buttons -->
-                    {% if categories.total > 0 %}
-                        <div class="category-buttons">
-                            {% for category in categories %}
-                                <button class="category-btn{% if selectedCategory == category.id %} active{% endif %}" 
-                                        onclick="filterByCategory('{{ category.id }}')">
-                                    {{ category.name }}
-                                </button>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="name">T-mog Name</button>
+                    <button class="filter-tab" data-filter="universe">Universe</button>
+                    <button class="filter-tab sort-btn" onclick="toggleSort()">
+                        Sort by Price <span class="sort-arrow">▼</span>
+                    </button>
                 </div>
 
                 <!-- Items Grid -->
-                <div class="items-grid">
-                    {% for item in items %}
-                        <div class="item-card" data-item-id="{{ item.id }}" onclick="selectItem('{{ item.id }}')">
-                            <div class="item-image">
-                                {% if item.previewImage %}
-                                    <img src="{{ item.previewImage.url }}" alt="{{ item.title }}">
-                                {% endif %}
+                <div class="items-grid" id="itemsGrid">
+                    {% if items.total > 0 %}
+                        {% for item in items %}
+                            <div class="item-card" data-item-id="{{ item.id }}" data-price="{{ item.price|default(0) }}" onclick="selectItem('{{ item.id }}', '{{ item.title }}', {{ item.price|default(0) }}, '{{ item.previewImage ? item.previewImage.url : '' }}', '{{ item.mainImage ? item.mainImage.url : '' }}')">
+                                <div class="item-image">
+                                    {% if item.previewImage %}
+                                        <img src="{{ item.previewImage.url }}" alt="{{ item.title }}">
+                                    {% else %}
+                                        <div class="placeholder-image"></div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="item-actions">
+                                    <button class="try-on-btn">
+                                        Try it on<br>
+                                        <span class="item-price">€{{ item.price|default(0)|number_format(2, '.', ',') }}</span>
+                                    </button>
+                                </div>
                             </div>
-                            
-                            <div class="item-actions">
-                                <button class="try-on-btn">
-                                    Try it on<br>
-                                    <span class="item-price">€{{ item.price|number_format(2, '.', ',') }}</span>
-                                </button>
-                            </div>
-                        </div>
+                        {% endfor %}
                     {% else %}
                         <div class="no-items">
                             <p>No items found.</p>
                         </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -97,11 +122,12 @@
 
 <style>
 .dressing-room-page {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     min-height: 100vh;
     color: #fff;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px 0;
+    overflow-x: hidden;
 }
 
 .dressing-room-container {
@@ -117,169 +143,262 @@
 
 .welcome-header h1 {
     font-size: 2.5rem;
-    font-weight: bold;
+    font-weight: 300;
     color: #fff;
     margin: 0;
+    letter-spacing: 1px;
 }
 
 .highlight {
-    color: #ff4757;
+    color: #e74c3c;
+    font-weight: 600;
 }
 
 .dressing-room-content {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 400px 1fr;
     gap: 40px;
     align-items: start;
 }
 
 /* Character Section */
+.character-section {
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .character-section h2 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-    color: #ddd;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #bdc3c7;
+    font-weight: 300;
+}
+
+.gender-selection {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.gender-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(149, 165, 166, 0.3);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gender-btn.active {
+    background: #e74c3c;
+    border-color: #c0392b;
+}
+
+.gender-btn img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+.gender-label, .race-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.active-gender {
+    color: #e74c3c;
+}
+
+.race-label {
+    background: #e74c3c;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    margin-left: auto;
 }
 
 .character-display {
+    position: relative;
     text-align: center;
 }
 
 .character-avatar {
-    width: 300px;
-    height: 400px;
-    background: rgba(255, 255, 255, 0.1);
+    width: 280px;
+    height: 350px;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
     border-radius: 15px;
-    margin: 0 auto 30px;
+    margin: 0 auto 25px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
-.main-character-image {
-    max-width: 100%;
-    max-height: 100%;
+.character-model {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.base-character {
+    max-width: 180px;
+    max-height: 280px;
     object-fit: contain;
 }
 
-.default-character img {
-    width: 150px;
-    height: 200px;
-    opacity: 0.5;
+.character-controls {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.control-item {
+    width: 40px;
+    height: 40px;
+    background: rgba(52, 73, 94, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-item:hover {
+    background: rgba(231, 76, 60, 0.6);
+    border-color: #e74c3c;
+    transform: translateX(5px);
+}
+
+.control-item img {
+    width: 24px;
+    height: 24px;
 }
 
 .add-to-cart-btn {
-    background: #ff4757;
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
     color: white;
     border: none;
     padding: 15px 30px;
     border-radius: 25px;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-align: center;
+    min-width: 140px;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
-.add-to-cart-btn:hover {
-    background: #ff3742;
+.add-to-cart-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #c0392b, #a93226);
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.add-to-cart-btn:disabled {
+    background: rgba(149, 165, 166, 0.5);
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 .price {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     display: block;
     margin-top: 5px;
+    font-weight: 700;
 }
 
 /* Wardrobe Section */
 .wardrobe-section {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 30px;
+    background: rgba(44, 62, 80, 0.8);
+    border-radius: 15px;
+    padding: 25px;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .wardrobe-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-labels {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.wardrobe-label, .catalog-label {
-    font-size: 1.5rem;
-    font-weight: bold;
 }
 
 .catalog-label {
-    color: #ff4757;
+    font-size: 1.2rem;
+    color: #bdc3c7;
+    font-weight: 300;
 }
 
-/* Category Tabs */
-.category-tabs {
-    margin-bottom: 30px;
+.wardrobe-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #bdc3c7;
 }
 
-.tab-filters {
+.filter-tabs {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
 }
 
 .filter-tab {
     background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: #bdc3c7;
     border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.filter-tab:hover, .filter-tab.active {
-    background: #ff4757;
-    border-color: #ff4757;
-    color: white;
-}
-
-.sort-btn .sort-arrow {
-    margin-left: 5px;
-    font-size: 0.8rem;
-}
-
-.category-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.category-btn {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ddd;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: 500;
     font-size: 0.9rem;
 }
 
-.category-btn:hover, .category-btn.active {
-    background: rgba(255, 71, 87, 0.3);
-    border-color: #ff4757;
+.filter-tab:hover, .filter-tab.active {
+    background: #e74c3c;
+    border-color: #c0392b;
     color: white;
+    transform: translateY(-1px);
 }
 
-/* Items Grid */
+.sort-btn .sort-arrow {
+    margin-left: 8px;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
 .items-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 20px;
-    max-height: 600px;
+    max-height: 500px;
     overflow-y: auto;
     padding-right: 10px;
 }
@@ -294,30 +413,53 @@
 }
 
 .items-grid::-webkit-scrollbar-thumb {
-    background: #ff4757;
+    background: #e74c3c;
     border-radius: 4px;
 }
 
+.items-grid::-webkit-scrollbar-thumb:hover {
+    background: #c0392b;
+}
+
 .item-card {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 15px;
+    background: linear-gradient(145deg, #34495e, #2c3e50);
+    border-radius: 12px;
     padding: 15px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
     position: relative;
+    overflow: hidden;
+}
+
+.item-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, transparent, rgba(231, 76, 60, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.item-card:hover::before {
+    opacity: 1;
 }
 
 .item-card:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 71, 87, 0.5);
+    border-color: rgba(231, 76, 60, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .item-card.selected {
-    border-color: #ff4757;
-    background: rgba(255, 71, 87, 0.2);
+    border-color: #e74c3c;
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    transform: translateY(-3px);
 }
 
 .item-image {
@@ -330,48 +472,63 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 }
 
 .item-image img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.placeholder-image {
+    width: 60px;
+    height: 60px;
+    background: rgba(149, 165, 166, 0.3);
+    border-radius: 6px;
 }
 
 .try-on-btn {
-    background: #ff4757;
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
     color: white;
     border: none;
     padding: 8px 12px;
     border-radius: 15px;
     font-size: 0.8rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     width: 100%;
     transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
 }
 
 .try-on-btn:hover {
-    background: #ff3742;
+    background: linear-gradient(145deg, #c0392b, #a93226);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 .item-price {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     display: block;
     margin-top: 3px;
+    font-weight: 700;
 }
 
 .no-items {
     grid-column: 1 / -1;
     text-align: center;
-    color: #999;
+    color: #7f8c8d;
     padding: 40px;
+    font-size: 1.1rem;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* Responsive Design */
+@media (max-width: 1200px) {
     .dressing-room-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: 350px 1fr;
         gap: 30px;
     }
     
@@ -381,12 +538,32 @@
     }
 }
 
+@media (max-width: 1024px) {
+    .dressing-room-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .character-avatar {
+        width: 280px;
+        height: 350px;
+    }
+    
+    .character-controls {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+}
+
 @media (max-width: 768px) {
     .welcome-header h1 {
         font-size: 2rem;
     }
     
-    .tab-filters {
+    .filter-tabs {
         flex-direction: column;
         align-items: stretch;
     }
@@ -394,11 +571,39 @@
     .items-grid {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 15px;
+        max-height: 400px;
     }
     
     .character-avatar {
-        width: 200px;
-        height: 250px;
+        width: 240px;
+        height: 300px;
+    }
+    
+    .gender-selection {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .header-labels {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dressing-room-container {
+        padding: 0 15px;
+    }
+    
+    .character-section,
+    .wardrobe-section {
+        padding: 20px 15px;
+    }
+    
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 12px;
     }
 }
 </style>
@@ -406,8 +611,66 @@
 <script>
 let selectedItemId = null;
 let currentSort = 'asc';
+let currentFilter = 'name';
 
-function selectItem(itemId) {
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharacter();
+    setupEventListeners();
+    
+    // Auto-select first item if available
+    const firstItem = document.querySelector('.item-card');
+    if (firstItem && !selectedItemId) {
+        const itemId = firstItem.getAttribute('data-item-id');
+        const price = firstItem.getAttribute('data-price');
+        firstItem.click();
+    }
+});
+
+function initializeCharacter() {
+    // Set up default character state
+    updateAddToCartButton(false);
+}
+
+function setupEventListeners() {
+    // Gender selection
+    document.querySelectorAll('.gender-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const gender = this.getAttribute('data-gender');
+            document.querySelector('.active-gender').textContent = gender.charAt(0).toUpperCase() + gender.slice(1);
+            
+            // Update character model based on gender
+            updateCharacterModel(gender);
+        });
+    });
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab:not(.sort-btn)').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.filter-tab:not(.sort-btn)').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            currentFilter = this.getAttribute('data-filter');
+            filterItems();
+        });
+    });
+
+    // Character controls
+    document.querySelectorAll('.control-item').forEach(control => {
+        control.addEventListener('click', function() {
+            // Add visual feedback
+            this.style.transform = 'translateX(10px) scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+    });
+}
+
+function selectItem(itemId, title, price, previewImage, mainImage) {
     // Remove previous selection
     document.querySelectorAll('.item-card').forEach(card => {
         card.classList.remove('selected');
@@ -419,46 +682,179 @@ function selectItem(itemId) {
         selectedCard.classList.add('selected');
         selectedItemId = itemId;
         
-        // Here you would typically make an AJAX call to get the full item data
-        // and update the character display
-        updateCharacterDisplay(itemId);
+        // Update character display
+        updateCharacterDisplay(mainImage || previewImage, title);
+        
+        // Update price and enable add to cart
+        updateAddToCartButton(true, price);
+        
+        // Add selection animation
+        selectedCard.style.transform = 'translateY(-8px) scale(1.05)';
+        setTimeout(() => {
+            selectedCard.style.transform = 'translateY(-3px)';
+        }, 300);
     }
 }
 
-function filterByCategory(categoryId) {
-    let url = new URL(window.location);
-    if (categoryId) {
-        url.searchParams.set('category', categoryId);
+function updateCharacterDisplay(imageUrl, itemTitle) {
+    const characterModel = document.getElementById('characterModel');
+    
+    if (imageUrl && imageUrl.trim() !== '') {
+        // Show the item image on character
+        characterModel.innerHTML = `<img src="${imageUrl}" alt="${itemTitle}" class="equipped-item">`;
+        
+        // Add wear animation
+        const equippedItem = characterModel.querySelector('.equipped-item');
+        equippedItem.style.opacity = '0';
+        equippedItem.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            equippedItem.style.transition = 'all 0.5s ease';
+            equippedItem.style.opacity = '1';
+            equippedItem.style.transform = 'scale(1)';
+        }, 100);
     } else {
-        url.searchParams.delete('category');
+        // Show default character
+        characterModel.innerHTML = '<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjVmNWY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNTBDMTIwIDUwIDEzNSA2NSAxMzUgODVTMTIwIDEyMCAxMDAgMTIwUzY1IDEwNSA2NSA4NVM4MCA1MCAxMDAgNTBaIiBmaWxsPSIjZmZkYmFjIi8+CjxyZWN0IHg9Ijc1IiB5PSIxMjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzMzMzMzMyIvPgo8cmVjdCB4PSI3MCIgeT0iMjAwIiB3aWR0aD0iNjAiIGhlaWdodD0iODAiIGZpbGw9IiM2NjY2NjYiLz4KPHJlY3QgeD0iNjAiIHk9IjI4MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjMzMzMzMzIi8+CjxyZWN0IHg9IjExMCIgeT0iMjgwIiB3aWR0aD0iMzAiIGhlaWdodD0iMjAiIGZpbGw9IiMzMzMzMzMiLz4KPC9zdmc+" alt="Default Character" class="base-character">';
     }
-    window.location.href = url.toString();
+}
+
+function updateCharacterModel(gender) {
+    // Update character based on gender selection
+    console.log('Updating character model for gender:', gender);
+    // Here you could load different base character models
+}
+
+function updateAddToCartButton(enabled, price = 0) {
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const priceElement = document.getElementById('itemPrice');
+    
+    if (enabled) {
+        addToCartBtn.disabled = false;
+        priceElement.textContent = `€${parseFloat(price).toFixed(2)}`;
+        addToCartBtn.style.cursor = 'pointer';
+    } else {
+        addToCartBtn.disabled = true;
+        priceElement.textContent = '€0.00';
+        addToCartBtn.style.cursor = 'not-allowed';
+    }
 }
 
 function toggleSort() {
     currentSort = currentSort === 'asc' ? 'desc' : 'asc';
     const arrow = document.querySelector('.sort-arrow');
-    arrow.textContent = currentSort === 'asc' ? '↓' : '↑';
+    arrow.textContent = currentSort === 'asc' ? '▼' : '▲';
     
-    let url = new URL(window.location);
-    url.searchParams.set('sort', 'price');
-    url.searchParams.set('order', currentSort);
-    window.location.href = url.toString();
+    sortItems();
 }
 
-function updateCharacterDisplay(itemId) {
-    // This would typically fetch item data via AJAX and update the character
-    console.log('Updating character display with item:', itemId);
+function sortItems() {
+    const itemsGrid = document.getElementById('itemsGrid');
+    const items = Array.from(itemsGrid.querySelectorAll('.item-card'));
+    
+    items.sort((a, b) => {
+        const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+        const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+        
+        return currentSort === 'asc' ? priceA - priceB : priceB - priceA;
+    });
+    
+    // Clear and re-append sorted items
+    items.forEach(item => itemsGrid.appendChild(item));
+    
+    // Add sort animation
+    items.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            item.style.transition = 'all 0.3s ease';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, index * 50);
+    });
 }
 
-// Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-select first item if available
-    const firstItem = document.querySelector('.item-card');
-    if (firstItem && !selectedItemId) {
-        const itemId = firstItem.getAttribute('data-item-id');
-        selectItem(itemId);
+function filterItems() {
+    // This function could be expanded to filter by category, type, etc.
+    console.log('Filtering items by:', currentFilter);
+    
+    // For now, just update the active filter tab
+    document.querySelectorAll('.filter-tab:not(.sort-btn)').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.getAttribute('data-filter') === currentFilter) {
+            tab.classList.add('active');
+        }
+    });
+}
+
+// Add some visual enhancements
+function addVisualEnhancements() {
+    // Add floating particles effect
+    const particles = document.createElement('div');
+    particles.className = 'particles';
+    particles.innerHTML = Array.from({length: 20}, () => '<div class="particle"></div>').join('');
+    document.querySelector('.dressing-room-page').appendChild(particles);
+}
+
+// Add cart functionality
+document.getElementById('addToCartBtn').addEventListener('click', function() {
+    if (selectedItemId && !this.disabled) {
+        // Add to cart animation
+        this.style.transform = 'scale(0.95)';
+        this.style.background = 'linear-gradient(145deg, #27ae60, #229954)';
+        this.innerHTML = 'Added!<br><span class="price">✓</span>';
+        
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+            this.style.background = 'linear-gradient(145deg, #e74c3c, #c0392b)';
+            const price = document.querySelector(`[data-item-id="${selectedItemId}"]`).getAttribute('data-price');
+            this.innerHTML = `Add to Cart<br><span class="price">€${parseFloat(price).toFixed(2)}</span>`;
+        }, 1500);
+        
+        // Here you would typically make an AJAX call to add the item to cart
+        console.log('Adding item to cart:', selectedItemId);
     }
 });
+
+// Add keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const items = document.querySelectorAll('.item-card');
+    const currentIndex = Array.from(items).findIndex(item => item.classList.contains('selected'));
+    
+    let newIndex = currentIndex;
+    
+    switch(e.key) {
+        case 'ArrowRight':
+            newIndex = Math.min(currentIndex + 1, items.length - 1);
+            break;
+        case 'ArrowLeft':
+            newIndex = Math.max(currentIndex - 1, 0);
+            break;
+        case 'ArrowDown':
+            // Move to next row (assuming 4 items per row)
+            newIndex = Math.min(currentIndex + 4, items.length - 1);
+            break;
+        case 'ArrowUp':
+            // Move to previous row
+            newIndex = Math.max(currentIndex - 4, 0);
+            break;
+        case 'Enter':
+            if (selectedItemId) {
+                document.getElementById('addToCartBtn').click();
+            }
+            return;
+        default:
+            return;
+    }
+    
+    if (newIndex !== currentIndex && items[newIndex]) {
+        items[newIndex].click();
+        items[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+});
+
+// Initialize enhancements
+setTimeout(addVisualEnhancements, 1000);
 </script>
 {% endblock %}

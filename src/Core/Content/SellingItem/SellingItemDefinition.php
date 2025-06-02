@@ -7,6 +7,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\FloatField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
@@ -45,6 +46,7 @@ class SellingItemDefinition extends EntityDefinition
             (new StringField('title', 'title'))->addFlags(new Required()),
             new StringField('subtitle', 'subtitle'),
             new StringField('link', 'link'),
+            new FloatField('price', 'price'),
             (new BoolField('active', 'active'))->addFlags(new Required()),
             new CreatedAtField(),
             new UpdatedAtField(),
