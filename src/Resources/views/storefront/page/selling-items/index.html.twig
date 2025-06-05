@@ -36,7 +36,7 @@
                     <div class="add-to-cart-section">
                         <button class="add-to-cart-btn" id="addToCartBtn" disabled>
                             Add to Cart<br>
-                            <span class="price" id="itemPrice">€11.85</span>
+                            <span class="price" id="itemPrice">€0.00</span>
                         </button>
                     </div>
 
@@ -88,16 +88,34 @@
                     </button>
                 </div>
 
+                <!-- Debug Info -->
+                <div class="debug-info" style="color: #999; font-size: 0.8rem; margin-bottom: 15px;">
+                    Found {{ itemsTotal|default(0) }} items
+                </div>
+
                 <!-- Items Grid -->
                 <div class="items-grid" id="itemsGrid">
-                    {% if items.total > 0 %}
+                    {% if items and items|length > 0 %}
                         {% for item in items %}
-                            <div class="item-card" data-item-id="{{ item.id }}" data-price="{{ item.price|default(0) }}" onclick="selectItem('{{ item.id }}', '{{ item.title }}', {{ item.price|default(0) }}, '{{ item.previewImage ? item.previewImage.url : '' }}', '{{ item.mainImage ? item.mainImage.url : '' }}')">
+                            <div class="item-card" 
+                                 data-item-id="{{ item.id }}" 
+                                 data-price="{{ item.price|default(0) }}" 
+                                 onclick="selectItem(
+                                     '{{ item.id }}', 
+                                     '{{ item.title|e('js') }}', 
+                                     {{ item.price|default(0) }}, 
+                                     '{{ item.previewImage ? item.previewImage.url|e('js') : '' }}', 
+                                     '{{ item.mainImage ? item.mainImage.url|e('js') : '' }}'
+                                 )">
                                 <div class="item-image">
-                                    {% if item.previewImage %}
+                                    {% if item.previewImage and item.previewImage.url %}
                                         <img src="{{ item.previewImage.url }}" alt="{{ item.title }}">
+                                    {% elseif item.mainImage and item.mainImage.url %}
+                                        <img src="{{ item.mainImage.url }}" alt="{{ item.title }}">
                                     {% else %}
-                                        <div class="placeholder-image"></div>
+                                        <div class="placeholder-image">
+                                            <span>{{ item.title|slice(0, 2)|upper }}</span>
+                                        </div>
                                     {% endif %}
                                 </div>
                                 
@@ -107,11 +125,16 @@
                                         <span class="item-price">€{{ item.price|default(0)|number_format(2, '.', ',') }}</span>
                                     </button>
                                 </div>
+                                
+                                <div class="item-title">{{ item.title }}</div>
                             </div>
                         {% endfor %}
                     {% else %}
                         <div class="no-items">
                             <p>No items found.</p>
+                            <p style="font-size: 0.9rem; color: #999;">
+                                Check if there are active selling items in the administration panel.
+                            </p>
                         </div>
                     {% endif %}
                 </div>
@@ -394,6 +417,13 @@
     transition: transform 0.3s ease;
 }
 
+.debug-info {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    text-align: center;
+}
+
 .items-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -487,6 +517,20 @@
     height: 60px;
     background: rgba(149, 165, 166, 0.3);
     border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #bdc3c7;
+}
+
+.item-title {
+    font-size: 0.8rem;
+    color: #bdc3c7;
+    margin-bottom: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .try-on-btn {
@@ -625,6 +669,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const price = firstItem.getAttribute('data-price');
         firstItem.click();
     }
+    
+    // Log for debugging
+    console.log('Items found:', document.querySelectorAll('.item-card').length);
 });
 
 function initializeCharacter() {
@@ -671,6 +718,8 @@ function setupEventListeners() {
 }
 
 function selectItem(itemId, title, price, previewImage, mainImage) {
+    console.log('Selecting item:', {itemId, title, price, previewImage, mainImage});
+    
     // Remove previous selection
     document.querySelectorAll('.item-card').forEach(card => {
         card.classList.remove('selected');

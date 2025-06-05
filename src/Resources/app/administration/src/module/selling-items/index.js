@@ -21,14 +21,14 @@ Module.register('selling-items', {
             component: 'selling-items-detail',
             path: 'detail/:id',
             meta: {
-                parentPath: 'selling.items.list'
+                parentPath: 'selling.items.index.list'
             }
         },
         create: {
             component: 'selling-items-create',
             path: 'create',
             meta: {
-                parentPath: 'selling.items.list'
+                parentPath: 'selling.items.index.list'
             }
         }
     },
@@ -37,7 +37,7 @@ Module.register('selling-items', {
         id: 'selling-items',
         label: 'selling-items.general.mainMenuItemGeneral',
         color: '#ff3d58',
-        path: 'selling.items.list',
+        path: 'selling.items.index.list',
         icon: 'default-shopping-paper-bag-product',
         position: 100,
         parent: 'sw-catalogue'

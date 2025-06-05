@@ -15,7 +15,7 @@ class Migration1700000001AddPriceField extends MigrationStep
     public function update(Connection $connection): void
     {
         $connection->executeStatement('
-            ALTER TABLE `selling_item` 
+            ALTER TABLE `selling_item`
             ADD COLUMN `price` DECIMAL(10,2) NULL DEFAULT NULL AFTER `link`
         ');
     }

@@ -39,7 +39,7 @@ Component.register('selling-items-list', {
                 property: 'title',
                 dataIndex: 'title',
                 label: 'selling-items.list.columnTitle',
-                routerLink: 'selling.items.detail',
+                routerLink: 'selling.items.index.detail',
                 primary: true
             }, {
                 property: 'subtitle',

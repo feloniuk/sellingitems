@@ -44,9 +44,9 @@ class SellingItemsController extends StorefrontController
         // Sorting
         $sortBy = $request->query->get('sort', 'createdAt');
         $sortOrder = $request->query->get('order', 'desc');
-        
-        $sortDirection = strtolower($sortOrder) === 'asc' 
-            ? FieldSorting::ASCENDING 
+
+        $sortDirection = strtolower($sortOrder) === 'asc'
+            ? FieldSorting::ASCENDING
             : FieldSorting::DESCENDING;
 
         switch ($sortBy) {
@@ -64,18 +64,19 @@ class SellingItemsController extends StorefrontController
         // Limit results for performance
         $criteria->setLimit(50);
 
-        $items = $this->sellingItemRepository->search($criteria, $context->getContext());
+        $searchResult = $this->sellingItemRepository->search($criteria, $context->getContext());
 
         // Get categories for filter
         $categoryCriteria = new Criteria();
         $categoryCriteria->addFilter(new EqualsFilter('active', true));
         $categoryCriteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
-        
-        $categories = $this->sellingItemCategoryRepository->search($categoryCriteria, $context->getContext());
+
+        $categoriesResult = $this->sellingItemCategoryRepository->search($categoryCriteria, $context->getContext());
 
         return $this->renderStorefront('@SellingItems/storefront/page/selling-items/index.html.twig', [
-            'items' => $items,
-            'categories' => $categories,
+            'items' => $searchResult->getElements(), // Получаем массив элементов
+            'itemsTotal' => $searchResult->getTotal(), // Общее количество
+            'categories' => $categoriesResult->getElements(), // Массив категорий
             'selectedCategory' => $categoryId,
             'currentSort' => $sortBy,
             'currentOrder' => $sortOrder
