@@ -44,7 +44,7 @@
 
                 <!-- Category Filter Tabs -->
                 <div class="category-tabs">
-                    <div class="tab-filters">
+                    {# <div class="tab-filters">
                         <button class="filter-tab{% if not selectedCategory %} active{% endif %}" 
                                 onclick="filterByCategory(null)">T-mog Name</button>
                         <button class="filter-tab" onclick="filterByCategory('type')">Type</button>
@@ -52,19 +52,22 @@
                         <button class="filter-tab sort-btn" onclick="toggleSort()">
                             Sort by Price <span class="sort-arrow">↓</span>
                         </button>
-                    </div>
+                    </div> #}
 
                     <!-- Category buttons -->
-                    {% if categories.total > 0 %}
-                        <div class="category-buttons">
+                    <div class="category-buttons">
+                        {% if categories.total > 0 %}
                             {% for category in categories %}
                                 <button class="category-btn{% if selectedCategory == category.id %} active{% endif %}" 
                                         onclick="filterByCategory('{{ category.id }}')">
                                     {{ category.name }}
                                 </button>
                             {% endfor %}
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                        <button class="category-btn sort-btn" onclick="toggleSort()">
+                            Sort by Price <span class="sort-arrow">↓</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Items Grid -->
@@ -86,7 +89,7 @@
                         </div>
                     {% else %}
                         <div class="no-items">
-                            <p>No items found.</p>
+                            {# <p>No items found.</p> #}
                         </div>
                     {% endfor %}
                 </div>
@@ -97,7 +100,6 @@
 
 <style>
 .dressing-room-page {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
     color: #fff;
     font-family: 'Arial', sans-serif;
