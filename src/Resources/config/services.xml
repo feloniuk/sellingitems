@@ -4,7 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Entity Definitions -->
         <service id="SellingItems\Core\Content\SellingItem\SellingItemDefinition">
             <tag name="shopware.entity.definition" entity="selling_item" />
         </service>
@@ -13,7 +12,6 @@
             <tag name="shopware.entity.definition" entity="selling_item_category" />
         </service>
 
-        <!-- Storefront Controller -->
         <service id="SellingItems\Storefront\Controller\SellingItemsController" public="true">
             <argument type="service" id="selling_item.repository"/>
             <argument type="service" id="selling_item_category.repository"/>
