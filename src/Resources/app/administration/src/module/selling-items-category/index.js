@@ -21,22 +21,23 @@ Module.register('selling-items-category', {
             component: 'selling-items-category-detail',
             path: 'detail/:id',
             meta: {
-                parentPath: 'selling.items.category.list'
+                parentPath: 'selling.items.category.index.list'
             }
         },
         create: {
             component: 'selling-items-category-create',
             path: 'create',
             meta: {
-                parentPath: 'selling.items.category.list'
+                parentPath: 'selling.items.category.index.list'
             }
         }
     },
 
     navigation: [{
+        id: 'selling-items-category',
         label: 'selling-items-category.general.mainMenuItemGeneral',
         color: '#ff3d58',
-        path: 'selling.items.category.list',
+        path: 'selling.items.category.index.list',
         icon: 'default-folder-full',
         position: 110,
         parent: 'sw-catalogue'

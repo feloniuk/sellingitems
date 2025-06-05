@@ -34,6 +34,14 @@
                         :label="$tc('selling-items.detail.linkLabel')">
                     </sw-field>
 
+                    <sw-number-field
+                        v-model="item.price"
+                        :label="$tc('selling-items.detail.priceLabel')"
+                        :min="0"
+                        :step="0.01"
+                        numberType="float">
+                    </sw-number-field>
+
                     <sw-entity-single-select
                         v-model="item.categoryId"
                         entity="selling_item_category"

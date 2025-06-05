@@ -17,6 +17,7 @@ class SellingItemEntity extends Entity
     protected string $title;
     protected ?string $subtitle = null;
     protected ?string $link = null;
+    protected ?float $price = null;
     protected bool $active = true;
     protected ?SellingItemCategoryEntity $category = null;
     protected ?MediaEntity $mainImage = null;
@@ -80,6 +81,16 @@ class SellingItemEntity extends Entity
     public function setLink(?string $link): void
     {
         $this->link = $link;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): void
+    {
+        $this->price = $price;
     }
 
     public function isActive(): bool

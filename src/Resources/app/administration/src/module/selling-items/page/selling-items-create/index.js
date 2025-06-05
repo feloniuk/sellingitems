@@ -14,7 +14,7 @@ Component.extend('selling-items-create', 'selling-items-detail', {
                 .save(this.item, Shopware.Context.api)
                 .then(() => {
                     this.isLoading = false;
-                    this.$router.push({ name: 'selling.items.detail', params: { id: this.item.id } });
+                    this.$router.push({ name: 'selling.items.index.detail', params: { id: this.item.id } });
                     this.createNotificationSuccess({
                         title: this.$tc('selling-items.detail.successTitle'),
                         message: this.$tc('selling-items.detail.successMessage')
