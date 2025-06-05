@@ -7,16 +7,18 @@ Component.register('selling-items-detail', {
     template,
 
     inject: [
-        'repositoryFactory'
+        'repositoryFactory',
+        'context'
     ],
 
     mixins: [
-        Mixin.getByName('notification')
+        Mixin.getByName('notification'),
+        Mixin.getByName('listing')
     ],
 
     metaInfo() {
         return {
-            title: this.$createTitle()
+            title: this.$createTitle(this.identifier)
         };
     },
 
@@ -25,46 +27,49 @@ Component.register('selling-items-detail', {
             item: null,
             isLoading: false,
             processSuccess: false,
+            isSaveSuccessful: false,
             repository: null
         };
     },
 
     computed: {
         categoryRepository() {
-            return this.repositoryFactory.create('selling_item_category');
-        },
-
-        categoryCriteria() {
-            const criteria = new Criteria();
-            criteria.addFilter(Criteria.equals('active', true));
-            return criteria;
+            return Shopware.Service('repositoryFactory').create('selling_item_category');
         }
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('selling_item');
+        this.repository = Shopware.Service('repositoryFactory').create('selling_item');
         this.getItem();
     },
 
     methods: {
         getItem() {
-            if (!this.$route.params.id) {
+            const id = this.$route.params.id;
+            if (!id) {
+                this.item = this.repository.create(Shopware.Context.api);
                 return;
             }
 
+            this.isLoading = true;
             const criteria = new Criteria();
             criteria.addAssociation('category');
             criteria.addAssociation('mainImage');
             criteria.addAssociation('previewImage');
 
-            this.repository
-                .get(this.$route.params.id, Shopware.Context.api, criteria)
-                .then((entity) => {
-                    this.item = entity;
+            this.repository.get(id, Shopware.Context.api, criteria).then((item) => {
+                this.item = item;
+                this.isLoading = false;
+            }).catch((error) => {
+                this.isLoading = false;
+                this.createNotificationError({
+                    title: this.$tc('selling-items.detail.errorTitle'),
+                    message: error.message
                 });
+            });
         },
 
-        onClickSave() {
+        onSave() {
             this.isLoading = true;
 
             this.repository
@@ -73,17 +78,24 @@ Component.register('selling-items-detail', {
                     this.getItem();
                     this.isLoading = false;
                     this.processSuccess = true;
-                }).catch((exception) => {
+                    this.isSaveSuccessful = true;
+                    this.createNotificationSuccess({
+                        title: this.$tc('selling-items.detail.successTitle'),
+                        message: this.$tc('selling-items.detail.successMessage')
+                    });
+                })
+                .catch((exception) => {
                     this.isLoading = false;
                     this.createNotificationError({
                         title: this.$tc('selling-items.detail.errorTitle'),
-                        message: exception
+                        message: exception.message
                     });
                 });
         },
 
         saveFinish() {
             this.processSuccess = false;
+            this.isSaveSuccessful = false;
         }
     }
 });

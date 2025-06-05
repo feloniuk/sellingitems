@@ -13,17 +13,19 @@
             <tag name="shopware.entity.definition" entity="selling_item_category" />
         </service>
 
-        <!-- Storefront Controller -->
-        <service id="SellingItems\Storefront\Controller\SellingItemsController" public="true">
-            <argument type="service" id="selling_item.repository"/>
-            <argument type="service" id="selling_item_category.repository"/>
-            <tag name="controller.service_arguments" />
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
-            <call method="setTwig">
-                <argument type="service" id="twig"/>
-            </call>
+        <!-- Repositories -->
+        <service id="selling_item.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
+            <argument>selling_item</argument>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\RequestCriteriaBuilder"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="selling_item_category.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
+            <argument>selling_item_category</argument>
+            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\RequestCriteriaBuilder"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
     </services>
 </container>

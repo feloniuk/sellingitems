@@ -19,27 +19,19 @@ Component.register('selling-items-category-list', {
             items: null,
             isLoading: true,
             sortBy: 'createdAt',
-            sortDirection: 'DESC'
-        };
-    },
-
-    metaInfo() {
-        return {
-            title: this.$createTitle()
+            sortDirection: 'DESC',
+            total: 0,
+            repository: null
         };
     },
 
     computed: {
-        repository() {
-            return this.repositoryFactory.create('selling_item_category');
-        },
-
         columns() {
             return [{
                 property: 'name',
                 dataIndex: 'name',
                 label: 'selling-items-category.list.columnName',
-                routerLink: 'selling.items.category.index.detail',
+                routerLink: 'selling.items.category.detail',
                 primary: true
             }, {
                 property: 'active',
@@ -47,6 +39,11 @@ Component.register('selling-items-category-list', {
                 label: 'selling-items-category.list.columnActive'
             }];
         }
+    },
+
+    created() {
+        this.repository = Shopware.Service('repositoryFactory').create('selling_item_category');
+        this.getList();
     },
 
     methods: {
@@ -58,11 +55,18 @@ Component.register('selling-items-category-list', {
             this.isLoading = true;
 
             this.repository
-                .search(criteria)
+                .search(criteria, Shopware.Context.api)
                 .then((result) => {
                     this.items = result;
                     this.total = result.total;
                     this.isLoading = false;
+                })
+                .catch((error) => {
+                    this.isLoading = false;
+                    this.createNotificationError({
+                        title: 'Error',
+                        message: error.message
+                    });
                 });
         },
 

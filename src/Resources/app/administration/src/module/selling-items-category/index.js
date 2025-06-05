@@ -13,22 +13,32 @@ Module.register('selling-items-category', {
     icon: 'default-folder-full',
 
     routes: {
+        index: {
+            component: 'selling-items-category-list',
+            path: 'index',
+            meta: {
+                parentPath: 'sw-catalogue'
+            }
+        },
         list: {
             component: 'selling-items-category-list',
-            path: 'list'
+            path: 'list',
+            meta: {
+                parentPath: 'sw-catalogue'
+            }
         },
         detail: {
             component: 'selling-items-category-detail',
             path: 'detail/:id',
             meta: {
-                parentPath: 'selling.items.category.index.list'
+                parentPath: 'selling.items.category.list'
             }
         },
         create: {
             component: 'selling-items-category-create',
             path: 'create',
             meta: {
-                parentPath: 'selling.items.category.index.list'
+                parentPath: 'selling.items.category.list'
             }
         }
     },
@@ -37,7 +47,7 @@ Module.register('selling-items-category', {
         id: 'selling-items-category',
         label: 'selling-items-category.general.mainMenuItemGeneral',
         color: '#ff3d58',
-        path: 'selling.items.category.index.list',
+        path: 'selling.items.category.list',
         icon: 'default-folder-full',
         position: 110,
         parent: 'sw-catalogue'
