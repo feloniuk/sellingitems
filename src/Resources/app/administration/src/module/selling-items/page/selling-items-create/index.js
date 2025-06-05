@@ -7,27 +7,23 @@ Component.extend('selling-items-create', 'selling-items-detail', {
             this.item.active = true;
         },
 
-        onSave() {
+        onClickSave() {
             this.isLoading = true;
 
             this.repository
                 .save(this.item, Shopware.Context.api)
                 .then(() => {
                     this.isLoading = false;
-                    this.$router.push({ 
-                        name: 'selling.items.detail', 
-                        params: { id: this.item.id } 
-                    });
+                    this.$router.push({ name: 'selling.items.detail', params: { id: this.item.id } });
                     this.createNotificationSuccess({
                         title: this.$tc('selling-items.detail.successTitle'),
                         message: this.$tc('selling-items.detail.successMessage')
                     });
-                })
-                .catch((exception) => {
+                }).catch((exception) => {
                     this.isLoading = false;
                     this.createNotificationError({
                         title: this.$tc('selling-items.detail.errorTitle'),
-                        message: exception.message
+                        message: exception
                     });
                 });
         }

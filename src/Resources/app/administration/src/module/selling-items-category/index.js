@@ -44,7 +44,6 @@ Module.register('selling-items-category', {
     },
 
     navigation: [{
-        id: 'selling-items-category',
         label: 'selling-items-category.general.mainMenuItemGeneral',
         color: '#ff3d58',
         path: 'selling.items.category.list',

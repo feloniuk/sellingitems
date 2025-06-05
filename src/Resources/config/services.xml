@@ -4,7 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Entity Definitions -->
         <service id="SellingItems\Core\Content\SellingItem\SellingItemDefinition">
             <tag name="shopware.entity.definition" entity="selling_item" />
         </service>
@@ -13,19 +12,16 @@
             <tag name="shopware.entity.definition" entity="selling_item_category" />
         </service>
 
-        <!-- Repositories -->
-        <service id="selling_item.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
-            <argument>selling_item</argument>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\RequestCriteriaBuilder"/>
-            <argument type="service" id="event_dispatcher"/>
-        </service>
-
-        <service id="selling_item_category.repository" class="Shopware\Core\Framework\DataAbstractionLayer\EntityRepository">
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\DefinitionInstanceRegistry"/>
-            <argument>selling_item_category</argument>
-            <argument type="service" id="Shopware\Core\Framework\DataAbstractionLayer\Search\RequestCriteriaBuilder"/>
-            <argument type="service" id="event_dispatcher"/>
+        <service id="SellingItems\Storefront\Controller\SellingItemsController" public="true">
+            <argument type="service" id="selling_item.repository"/>
+            <argument type="service" id="selling_item_category.repository"/>
+            <tag name="controller.service_arguments" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
         </service>
     </services>
 </container>
