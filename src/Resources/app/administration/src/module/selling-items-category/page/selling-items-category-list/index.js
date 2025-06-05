@@ -39,7 +39,7 @@ Component.register('selling-items-category-list', {
                 property: 'name',
                 dataIndex: 'name',
                 label: 'selling-items-category.list.columnName',
-                routerLink: 'selling.items.category.index.detail',
+                routerLink: 'selling.items.category.detail',
                 primary: true
             }, {
                 property: 'active',

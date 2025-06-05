@@ -12,7 +12,7 @@
             <template #smart-bar-actions>
                 {% block selling_items_list_smart_bar_actions_add %}
                     <sw-button
-                        :routerLink="{ name: 'selling.items.index.create' }"
+                        :routerLink="{ name: 'selling.items.create' }"
                         variant="primary">
                         {{ $tc('selling-items.list.buttonAddItem') }}
                     </sw-button>
@@ -29,7 +29,7 @@
                         :repository="repository"
                         :showSelection="false"
                         :columns="columns"
-                        detailRoute="selling.items.index.detail"
+                        detailRoute="selling.items.detail"
                         :isLoading="isLoading"
                         @update-records="updateTotal">
                     </sw-entity-listing>
