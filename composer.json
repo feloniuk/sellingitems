@@ -1,8 +1,8 @@
 {
-    "name": "sellingitems/plugin",
+    "name": "custom/selling-items",
     "description": "Selling Items Plugin",
     "type": "shopware-platform-plugin",
-    "version": "1.0.0",
+    "version": "v1.0.0",
     "license": "proprietary",
     "authors": [
         {

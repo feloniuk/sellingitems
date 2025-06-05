@@ -19,13 +19,21 @@ Component.register('selling-items-category-list', {
             items: null,
             isLoading: true,
             sortBy: 'createdAt',
-            sortDirection: 'DESC',
-            total: 0,
-            repository: null
+            sortDirection: 'DESC'
+        };
+    },
+
+    metaInfo() {
+        return {
+            title: this.$createTitle()
         };
     },
 
     computed: {
+        repository() {
+            return this.repositoryFactory.create('selling_item_category');
+        },
+
         columns() {
             return [{
                 property: 'name',
@@ -41,11 +49,6 @@ Component.register('selling-items-category-list', {
         }
     },
 
-    created() {
-        this.repository = Shopware.Service('repositoryFactory').create('selling_item_category');
-        this.getList();
-    },
-
     methods: {
         getList() {
             const criteria = new Criteria(this.page, this.limit);
@@ -55,18 +58,11 @@ Component.register('selling-items-category-list', {
             this.isLoading = true;
 
             this.repository
-                .search(criteria, Shopware.Context.api)
+                .search(criteria)
                 .then((result) => {
                     this.items = result;
                     this.total = result.total;
                     this.isLoading = false;
-                })
-                .catch((error) => {
-                    this.isLoading = false;
-                    this.createNotificationError({
-                        title: 'Error',
-                        message: error.message
-                    });
                 });
         },
 

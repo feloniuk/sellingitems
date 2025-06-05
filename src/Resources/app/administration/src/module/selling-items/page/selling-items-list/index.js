@@ -19,13 +19,21 @@ Component.register('selling-items-list', {
             items: null,
             isLoading: true,
             sortBy: 'createdAt',
-            sortDirection: 'DESC',
-            total: 0,
-            repository: null
+            sortDirection: 'DESC'
+        };
+    },
+
+    metaInfo() {
+        return {
+            title: this.$createTitle()
         };
     },
 
     computed: {
+        repository() {
+            return this.repositoryFactory.create('selling_item');
+        },
+
         columns() {
             return [{
                 property: 'title',
@@ -34,13 +42,17 @@ Component.register('selling-items-list', {
                 routerLink: 'selling.items.detail',
                 primary: true
             }, {
-                property: 'category.name',
-                dataIndex: 'category.name',
-                label: 'selling-items.list.columnCategory'
+                property: 'subtitle',
+                dataIndex: 'subtitle',
+                label: 'selling-items.list.columnSubtitle'
             }, {
                 property: 'price',
                 dataIndex: 'price',
                 label: 'selling-items.list.columnPrice'
+            }, {
+                property: 'category.name',
+                dataIndex: 'category.name',
+                label: 'selling-items.list.columnCategory'
             }, {
                 property: 'active',
                 dataIndex: 'active',
@@ -49,33 +61,23 @@ Component.register('selling-items-list', {
         }
     },
 
-    created() {
-        this.repository = Shopware.Service('repositoryFactory').create('selling_item');
-        this.getList();
-    },
-
     methods: {
         getList() {
             const criteria = new Criteria(this.page, this.limit);
             criteria.setTerm(this.term);
             criteria.addSorting(Criteria.sort(this.sortBy, this.sortDirection));
             criteria.addAssociation('category');
+            criteria.addAssociation('mainImage');
+            criteria.addAssociation('previewImage');
 
             this.isLoading = true;
 
             this.repository
-                .search(criteria, Shopware.Context.api)
+                .search(criteria)
                 .then((result) => {
                     this.items = result;
                     this.total = result.total;
                     this.isLoading = false;
-                })
-                .catch((error) => {
-                    this.isLoading = false;
-                    this.createNotificationError({
-                        title: 'Error',
-                        message: error.message
-                    });
                 });
         },
 

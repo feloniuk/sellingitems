@@ -1,7 +1,6 @@
 import template from './selling-items-category-detail.html.twig';
 
 const { Component, Mixin } = Shopware;
-const { Criteria } = Shopware.Data;
 
 Component.register('selling-items-category-detail', {
     template,
@@ -11,13 +10,12 @@ Component.register('selling-items-category-detail', {
     ],
 
     mixins: [
-        Mixin.getByName('notification'),
-        Mixin.getByName('listing')
+        Mixin.getByName('notification')
     ],
 
     metaInfo() {
         return {
-            title: this.$createTitle(this.identifier)
+            title: this.$createTitle()
         };
     },
 
@@ -26,40 +24,29 @@ Component.register('selling-items-category-detail', {
             item: null,
             isLoading: false,
             processSuccess: false,
-            isSaveSuccessful: false,
             repository: null
         };
     },
 
     created() {
-        this.repository = Shopware.Service('repositoryFactory').create('selling_item_category');
+        this.repository = this.repositoryFactory.create('selling_item_category');
         this.getItem();
     },
 
     methods: {
         getItem() {
-            const id = this.$route.params.id;
-            if (!id) {
-                this.item = this.repository.create(Shopware.Context.api);
+            if (!this.$route.params.id) {
                 return;
             }
 
-            this.isLoading = true;
-            const criteria = new Criteria();
-
-            this.repository.get(id, Shopware.Context.api, criteria).then((item) => {
-                this.item = item;
-                this.isLoading = false;
-            }).catch((error) => {
-                this.isLoading = false;
-                this.createNotificationError({
-                    title: this.$tc('selling-items-category.detail.errorTitle'),
-                    message: error.message
+            this.repository
+                .get(this.$route.params.id, Shopware.Context.api)
+                .then((entity) => {
+                    this.item = entity;
                 });
-            });
         },
 
-        onSave() {
+        onClickSave() {
             this.isLoading = true;
 
             this.repository
@@ -68,24 +55,17 @@ Component.register('selling-items-category-detail', {
                     this.getItem();
                     this.isLoading = false;
                     this.processSuccess = true;
-                    this.isSaveSuccessful = true;
-                    this.createNotificationSuccess({
-                        title: this.$tc('selling-items-category.detail.successTitle'),
-                        message: this.$tc('selling-items-category.detail.successMessage')
-                    });
-                })
-                .catch((exception) => {
+                }).catch((exception) => {
                     this.isLoading = false;
                     this.createNotificationError({
                         title: this.$tc('selling-items-category.detail.errorTitle'),
-                        message: exception.message
+                        message: exception
                     });
                 });
         },
 
         saveFinish() {
             this.processSuccess = false;
-            this.isSaveSuccessful = false;
         }
     }
 });

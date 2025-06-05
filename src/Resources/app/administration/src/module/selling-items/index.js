@@ -13,19 +13,9 @@ Module.register('selling-items', {
     icon: 'default-shopping-paper-bag-product',
 
     routes: {
-        index: {
-            component: 'selling-items-list',
-            path: 'index',
-            meta: {
-                parentPath: 'sw-catalogue'
-            }
-        },
         list: {
             component: 'selling-items-list',
-            path: 'list',
-            meta: {
-                parentPath: 'sw-catalogue'
-            }
+            path: 'list'
         },
         detail: {
             component: 'selling-items-detail',

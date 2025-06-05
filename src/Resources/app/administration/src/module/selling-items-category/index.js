@@ -13,19 +13,9 @@ Module.register('selling-items-category', {
     icon: 'default-folder-full',
 
     routes: {
-        index: {
-            component: 'selling-items-category-list',
-            path: 'index',
-            meta: {
-                parentPath: 'sw-catalogue'
-            }
-        },
         list: {
             component: 'selling-items-category-list',
-            path: 'list',
-            meta: {
-                parentPath: 'sw-catalogue'
-            }
+            path: 'list'
         },
         detail: {
             component: 'selling-items-category-detail',
