@@ -8,6 +8,7 @@ Component.extend('selling-items-create', 'selling-items-detail', {
             // Initialize with null values for images
             this.item.mainImageId = null;
             this.item.previewImageId = null;
+            this.item.price = 0;
         },
 
         onClickSave() {

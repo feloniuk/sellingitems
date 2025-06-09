@@ -32,9 +32,20 @@ class SellingItemsController extends StorefrontController
         // Create criteria for items
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('active', true));
+        
+        // Important: Add associations for media entities
         $criteria->addAssociation('category');
         $criteria->addAssociation('mainImage');
         $criteria->addAssociation('previewImage');
+        
+        // Add media associations to load full media data
+        $criteria->getAssociation('mainImage')
+            ->addAssociation('mediaFolder')
+            ->addAssociation('thumbnails');
+            
+        $criteria->getAssociation('previewImage')
+            ->addAssociation('mediaFolder')
+            ->addAssociation('thumbnails');
         
         // Handle sorting
         $sort = $request->query->get('sort', 'createdAt');
@@ -69,6 +80,17 @@ class SellingItemsController extends StorefrontController
         if ($selectedItemId) {
             $selectedCriteria = new Criteria([$selectedItemId]);
             $selectedCriteria->addAssociation('mainImage');
+            $selectedCriteria->addAssociation('previewImage');
+            
+            // Add media associations
+            $selectedCriteria->getAssociation('mainImage')
+                ->addAssociation('mediaFolder')
+                ->addAssociation('thumbnails');
+                
+            $selectedCriteria->getAssociation('previewImage')
+                ->addAssociation('mediaFolder')
+                ->addAssociation('thumbnails');
+                
             $selectedResult = $this->sellingItemRepository->search($selectedCriteria, $context->getContext());
             if ($selectedResult->count() > 0) {
                 $selectedItem = $selectedResult->first();
@@ -84,7 +106,13 @@ class SellingItemsController extends StorefrontController
             'items' => $items,
             'categories' => $categories,
             'selectedCategory' => $categoryId,
-            'selectedItem' => $selectedItem
+            'selectedItem' => $selectedItem,
+            'page' => [
+                'metaInformation' => [
+                    'metaTitle' => 'Dressing Room',
+                    'metaDescription' => 'Browse our collection in the dressing room'
+                ]
+            ]
         ]);
     }
 }

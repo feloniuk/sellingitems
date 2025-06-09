@@ -16,10 +16,17 @@
                 <div class="character-display">
                     <div class="character-avatar">
                         {% if selectedItem and selectedItem.mainImage %}
-                            {# Use Shopware's media URL filter #}
-                            <img src="{{ selectedItem.mainImage|sw_encode_media_url }}" 
-                                 alt="{{ selectedItem.title }}" 
-                                 class="main-character-image">
+                            {# Use Shopware's media URL generation #}
+                            {% set mainImage = selectedItem.mainImage %}
+                            {% if mainImage.url %}
+                                <img src="{{ mainImage.url }}" 
+                                     alt="{{ selectedItem.title }}" 
+                                     class="main-character-image">
+                            {% else %}
+                                <img src="{{ mainImage|sw_encode_media_url }}" 
+                                     alt="{{ selectedItem.title }}" 
+                                     class="main-character-image">
+                            {% endif %}
                         {% else %}
                             <div class="default-character">
                                 <img src="{{ asset('bundles/storefront/assets/icon/default/avatar.svg') }}" 
@@ -71,15 +78,26 @@
                 <!-- Items Grid -->
                 <div class="items-grid">
                     {% for item in items %}
+                        {% set previewUrl = '' %}
+                        {% set mainUrl = '' %}
+                        
+                        {% if item.previewImage %}
+                            {% set previewUrl = item.previewImage.url ? item.previewImage.url : item.previewImage|sw_encode_media_url %}
+                        {% endif %}
+                        
+                        {% if item.mainImage %}
+                            {% set mainUrl = item.mainImage.url ? item.mainImage.url : item.mainImage|sw_encode_media_url %}
+                        {% endif %}
+                        
                         <div class="item-card{% if selectedItem and selectedItem.id == item.id %} selected{% endif %}" 
                              data-item-id="{{ item.id }}" 
                              data-item-title="{{ item.title }}"
                              data-item-price="{{ item.price }}"
-                             data-main-image="{{ item.mainImage ? item.mainImage|sw_encode_media_url : '' }}"
+                             data-main-image="{{ mainUrl }}"
                              onclick="selectItem('{{ item.id }}')">
                             <div class="item-image">
-                                {% if item.previewImage %}
-                                    <img src="{{ item.previewImage|sw_encode_media_url }}" 
+                                {% if previewUrl %}
+                                    <img src="{{ previewUrl }}" 
                                          alt="{{ item.title }}"
                                          loading="lazy">
                                 {% else %}

@@ -67,6 +67,16 @@ Component.register('selling-items-detail', {
         onClickSave() {
             this.isLoading = true;
 
+            // Validate required fields
+            if (!this.item.title || !this.item.categoryId) {
+                this.isLoading = false;
+                this.createNotificationError({
+                    title: this.$tc('selling-items.detail.errorTitle'),
+                    message: 'Please fill in all required fields'
+                });
+                return;
+            }
+
             this.repository
                 .save(this.item, Shopware.Context.api)
                 .then(() => {
@@ -88,20 +98,6 @@ Component.register('selling-items-detail', {
 
         saveFinish() {
             this.processSuccess = false;
-        },
-
-        // Handle main image selection
-        onMainImageUpload(mediaId) {
-            if (this.item) {
-                this.item.mainImageId = mediaId;
-            }
-        },
-
-        // Handle preview image selection
-        onPreviewImageUpload(mediaId) {
-            if (this.item) {
-                this.item.previewImageId = mediaId;
-            }
         }
     }
 });
