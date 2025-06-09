@@ -24,7 +24,9 @@
             "priceLabel": "Price (€)",
             "categoryLabel": "Category",
             "mainImageLabel": "Main Image",
+            "mainImagePlaceholder": "Select main image...",
             "previewImageLabel": "Preview Image",
+            "previewImagePlaceholder": "Select preview image...",
             "activeLabel": "Active"
         }
     }
