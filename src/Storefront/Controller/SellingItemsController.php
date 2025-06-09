@@ -190,7 +190,6 @@ class SellingItemsController extends StorefrontController
 
     private function generateMediaUrl($media): string
     {
-        // This is a simplified version. In a real implementation,
         // you would use Shopware's media URL generation service
         return '/media/' . $media->getFileName() . '.' . $media->getFileExtension();
     }
