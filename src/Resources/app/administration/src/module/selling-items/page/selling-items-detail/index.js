@@ -88,6 +88,20 @@ Component.register('selling-items-detail', {
 
         saveFinish() {
             this.processSuccess = false;
+        },
+
+        // Handle main image selection
+        onMainImageUpload(mediaId) {
+            if (this.item) {
+                this.item.mainImageId = mediaId;
+            }
+        },
+
+        // Handle preview image selection
+        onPreviewImageUpload(mediaId) {
+            if (this.item) {
+                this.item.previewImageId = mediaId;
+            }
         }
     }
 });

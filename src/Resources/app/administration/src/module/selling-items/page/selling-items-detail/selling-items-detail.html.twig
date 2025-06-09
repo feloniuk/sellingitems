@@ -51,18 +51,26 @@
                     </sw-entity-single-select>
 
                     <!-- Main Image Upload -->
-                    <sw-media-upload-v2
-                        :label="$tc('selling-items.detail.mainImageLabel')"
-                        :source="item.mainImageId"
-                        @media-upload-add-file="item.mainImageId = $event">
-                    </sw-media-upload-v2>
+                    <div class="sw-field">
+                        <label class="sw-field__label">{{ $tc('selling-items.detail.mainImageLabel') }}</label>
+                        <sw-media-upload-v2
+                            :source="item.mainImageId"
+                            :allowMultiSelect="false"
+                            :variant="'regular'"
+                            @media-upload-add-file="onMainImageUpload">
+                        </sw-media-upload-v2>
+                    </div>
 
                     <!-- Preview Image Upload -->
-                    <sw-media-upload-v2
-                        :label="$tc('selling-items.detail.previewImageLabel')"
-                        :source="item.previewImageId"
-                        @media-upload-add-file="item.previewImageId = $event">
-                    </sw-media-upload-v2>
+                    <div class="sw-field">
+                        <label class="sw-field__label">{{ $tc('selling-items.detail.previewImageLabel') }}</label>
+                        <sw-media-upload-v2
+                            :source="item.previewImageId"
+                            :allowMultiSelect="false"
+                            :variant="'regular'"
+                            @media-upload-add-file="onPreviewImageUpload">
+                        </sw-media-upload-v2>
+                    </div>
 
                     <sw-switch-field
                         v-model="item.active"
