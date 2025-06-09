@@ -1,0 +1,75 @@
+{% block selling_items_detail %}
+    <sw-page class="selling-items-detail">
+        <template #smart-bar-header>
+            <h2>{{ item ? item.title : '' }}</h2>
+        </template>
+
+        <template #smart-bar-actions>
+            <sw-button-process
+                :isLoading="isLoading"
+                :processSuccess="processSuccess"
+                variant="primary"
+                @process-finish="saveFinish"
+                @click="onClickSave">
+                {{ $tc('selling-items.detail.buttonSave') }}
+            </sw-button-process>
+        </template>
+
+        <template #content>
+            <sw-card-view>
+                <sw-card v-if="item" :isLoading="isLoading">
+                    <sw-field 
+                        v-model="item.title"
+                        :label="$tc('selling-items.detail.titleLabel')"
+                        required>
+                    </sw-field>
+
+                    <sw-field 
+                        v-model="item.subtitle"
+                        :label="$tc('selling-items.detail.subtitleLabel')">
+                    </sw-field>
+
+                    <sw-field 
+                        v-model="item.link"
+                        :label="$tc('selling-items.detail.linkLabel')">
+                    </sw-field>
+
+                    <sw-number-field
+                        v-model="item.price"
+                        :label="$tc('selling-items.detail.priceLabel')"
+                        :min="0"
+                        :step="0.01"
+                        numberType="float">
+                    </sw-number-field>
+
+                    <sw-entity-single-select
+                        v-model="item.categoryId"
+                        entity="selling_item_category"
+                        :label="$tc('selling-items.detail.categoryLabel')"
+                        :criteria="categoryCriteria"
+                        required>
+                    </sw-entity-single-select>
+
+                    <!-- Main Image Upload -->
+                    <sw-media-field
+                        v-model="item.mainImageId"
+                        :label="$tc('selling-items.detail.mainImageLabel')"
+                        :allowMultiSelect="false">
+                    </sw-media-field>
+
+                    <!-- Preview Image Upload -->
+                    <sw-media-field
+                        v-model="item.previewImageId"
+                        :label="$tc('selling-items.detail.previewImageLabel')"
+                        :allowMultiSelect="false">
+                    </sw-media-field>
+
+                    <sw-switch-field
+                        v-model="item.active"
+                        :label="$tc('selling-items.detail.activeLabel')">
+                    </sw-switch-field>
+                </sw-card>
+            </sw-card-view>
+        </template>
+    </sw-page>
+{% endblock %}

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="SellingItems\Core\Content\SellingItem\SellingItemDefinition">
+            <tag name="shopware.entity.definition" entity="selling_item" />
+        </service>
+
+        <service id="SellingItems\Core\Content\SellingItemCategory\SellingItemCategoryDefinition">
+            <tag name="shopware.entity.definition" entity="selling_item_category" />
+        </service>
+
+        <service id="SellingItems\Storefront\Controller\SellingItemsController" public="true">
+            <argument type="service" id="selling_item.repository"/>
+            <argument type="service" id="selling_item_category.repository"/>
+            <tag name="controller.service_arguments" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+    </services>
+</container>

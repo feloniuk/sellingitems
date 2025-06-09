@@ -1,0 +1,48 @@
+<div id="items-grid-content" style="display: grid;grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; max-height: 600px; overflow-y: auto; padding-right: 10px; position: relative; min-height: 200px;">
+    {% for item in items %}
+        {% set previewUrl = '' %}
+        {% set mainUrl = '' %}
+
+        {% if item.previewImage %}
+            {% set previewUrl = item.previewImage.url ? item.previewImage.url : item.previewImage|sw_encode_media_url %}
+        {% endif %}
+
+        {% if item.mainImage %}
+            {% set mainUrl = item.mainImage.url ? item.mainImage.url : item.mainImage|sw_encode_media_url %}
+        {% endif %}
+
+        <div class="item-card{% if selectedItem and selectedItem.id == item.id %} selected{% endif %}" 
+             data-item-id="{{ item.id }}" 
+             data-item-title="{{ item.title }}"
+             data-item-price="{{ item.price }}"
+             data-main-image="{{ mainUrl }}"
+             onclick="selectItem('{{ item.id }}')">
+            <div class="item-image">
+                {% if previewUrl %}
+                    <img src="{{ previewUrl }}" 
+                         alt="{{ item.title }}"
+                         loading="lazy">
+                {% else %}
+                    <div class="item-placeholder">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="item-actions">
+                <button class="try-on-btn">
+                    Try it on<br>
+                    <span class="item-price">€{{ item.price|number_format(2, '.', ',') }}</span>
+                </button>
+            </div>
+        </div>
+    {% else %}
+        <div class="no-items">
+            <p>No items found.</p>
+        </div>
+    {% endfor %}
+</div>

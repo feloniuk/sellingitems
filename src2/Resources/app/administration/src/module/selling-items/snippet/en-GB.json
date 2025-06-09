@@ -1,0 +1,33 @@
+{
+    "selling-items": {
+        "general": {
+            "mainMenuItemGeneral": "Selling Items",
+            "descriptionTextModule": "Manage selling items"
+        },
+        "list": {
+            "textTitle": "Selling Items",
+            "buttonAddItem": "Add Item",
+            "columnTitle": "Title",
+            "columnSubtitle": "Subtitle",
+            "columnCategory": "Category",
+            "columnPrice": "Price",
+            "columnActive": "Active"
+        },
+        "detail": {
+            "buttonSave": "Save",
+            "errorTitle": "Error",
+            "successTitle": "Success",
+            "successMessage": "Item has been saved successfully",
+            "titleLabel": "Title",
+            "subtitleLabel": "Subtitle",
+            "linkLabel": "Link",
+            "priceLabel": "Price (€)",
+            "categoryLabel": "Category",
+            "mainImageLabel": "Main Image",
+            "mainImagePlaceholder": "Select main image...",
+            "previewImageLabel": "Preview Image",
+            "previewImagePlaceholder": "Select preview image...",
+            "activeLabel": "Active"
+        }
+    }
+}

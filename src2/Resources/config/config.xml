@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    
+    <card>
+        <title>Basic Configuration</title>
+        <title lang="de-DE">Grundeinstellungen</title>
+
+        <input-field>
+            <name>itemsPerPage</name>
+            <label>Items per page</label>
+            <label lang="de-DE">Elemente pro Seite</label>
+            <defaultValue>20</defaultValue>
+            <inputType>int</inputType>
+        </input-field>
+
+        <input-field type="bool">
+            <name>showInNavigation</name>
+            <label>Show in main navigation</label>
+            <label lang="de-DE">In Hauptnavigation anzeigen</label>
+            <defaultValue>true</defaultValue>
+        </input-field>
+    </card>
+</config>

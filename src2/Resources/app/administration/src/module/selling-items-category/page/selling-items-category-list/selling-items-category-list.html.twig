@@ -1,0 +1,40 @@
+{% block selling_items_category_list %}
+    <sw-page class="selling-items-category-list">
+        {% block selling_items_category_list_smart_bar_header %}
+            <template #smart-bar-header>
+                {% block selling_items_category_list_smart_bar_header_title %}
+                    <h2>{{ $tc('selling-items-category.list.textTitle') }}</h2>
+                {% endblock %}
+            </template>
+        {% endblock %}
+
+        {% block selling_items_category_list_smart_bar_actions %}
+            <template #smart-bar-actions>
+                {% block selling_items_category_list_smart_bar_actions_add %}
+                    <sw-button
+                        :routerLink="{ name: 'selling.items.category.create' }"
+                        variant="primary">
+                        {{ $tc('selling-items-category.list.buttonAddCategory') }}
+                    </sw-button>
+                {% endblock %}
+            </template>
+        {% endblock %}
+
+        {% block selling_items_category_list_content %}
+            <template #content>
+                {% block selling_items_category_list_content_list %}
+                    <sw-entity-listing
+                        v-if="items"
+                        :items="items"
+                        :repository="repository"
+                        :showSelection="false"
+                        :columns="columns"
+                        detailRoute="selling.items.category.detail"
+                        :isLoading="isLoading"
+                        @update-records="updateTotal">
+                    </sw-entity-listing>
+                {% endblock %}
+            </template>
+        {% endblock %}
+    </sw-page>
+{% endblock %}
