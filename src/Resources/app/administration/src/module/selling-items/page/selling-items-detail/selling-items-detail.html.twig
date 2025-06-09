@@ -51,26 +51,18 @@
                     </sw-entity-single-select>
 
                     <!-- Main Image Upload -->
-                    <sw-media-field
-                        v-model="item.mainImageId"
+                    <sw-media-upload-v2
                         :label="$tc('selling-items.detail.mainImageLabel')"
-                        :allowMultiSelect="false"
-                        :uploadTag="uploadTag"
-                        :defaultFolder="null"
-                        @media-upload-sidebar-open="openMediaSidebar"
-                        @selection-change="(mediaEntityList) => onMediaSelectionChange(mediaEntityList, 'mainImage')">
-                    </sw-media-field>
+                        :source="item.mainImageId"
+                        @media-upload-add-file="item.mainImageId = $event">
+                    </sw-media-upload-v2>
 
                     <!-- Preview Image Upload -->
-                    <sw-media-field
-                        v-model="item.previewImageId"
+                    <sw-media-upload-v2
                         :label="$tc('selling-items.detail.previewImageLabel')"
-                        :allowMultiSelect="false"
-                        :uploadTag="uploadTag"
-                        :defaultFolder="null"
-                        @media-upload-sidebar-open="openMediaSidebar"
-                        @selection-change="(mediaEntityList) => onMediaSelectionChange(mediaEntityList, 'previewImage')">
-                    </sw-media-field>
+                        :source="item.previewImageId"
+                        @media-upload-add-file="item.previewImageId = $event">
+                    </sw-media-upload-v2>
 
                     <sw-switch-field
                         v-model="item.active"

@@ -7,8 +7,7 @@ Component.register('selling-items-detail', {
     template,
 
     inject: [
-        'repositoryFactory',
-        'mediaService'
+        'repositoryFactory'
     ],
 
     mixins: [
@@ -26,9 +25,7 @@ Component.register('selling-items-detail', {
             item: null,
             isLoading: false,
             processSuccess: false,
-            repository: null,
-            mediaRepository: null,
-            uploadTag: 'selling-items-upload-tag'
+            repository: null
         };
     },
 
@@ -41,20 +38,11 @@ Component.register('selling-items-detail', {
             const criteria = new Criteria();
             criteria.addFilter(Criteria.equals('active', true));
             return criteria;
-        },
-
-        mediaModalMainImage() {
-            return this.item?.mainImageId || null;
-        },
-
-        mediaModalPreviewImage() {
-            return this.item?.previewImageId || null;
         }
     },
 
     created() {
         this.repository = this.repositoryFactory.create('selling_item');
-        this.mediaRepository = this.repositoryFactory.create('media');
         this.getItem();
     },
 
@@ -100,32 +88,6 @@ Component.register('selling-items-detail', {
 
         saveFinish() {
             this.processSuccess = false;
-        },
-
-        onSetMainMediaItem(mediaEntity) {
-            this.item.mainImageId = mediaEntity.id;
-        },
-
-        onSetPreviewMediaItem(mediaEntity) {
-            this.item.previewImageId = mediaEntity.id;
-        },
-
-        onRemoveMainMediaItem() {
-            this.item.mainImageId = null;
-        },
-
-        onRemovePreviewMediaItem() {
-            this.item.previewImageId = null;
-        },
-
-        onMediaSelectionChange(mediaEntityList, fieldName) {
-            if (mediaEntityList.length > 0) {
-                if (fieldName === 'mainImage') {
-                    this.item.mainImageId = mediaEntityList[0].id;
-                } else if (fieldName === 'previewImage') {
-                    this.item.previewImageId = mediaEntityList[0].id;
-                }
-            }
         }
     }
 });
