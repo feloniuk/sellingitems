@@ -26,34 +26,65 @@ class SellingItemsController extends StorefrontController
         $this->sellingItemCategoryRepository = $sellingItemCategoryRepository;
     }
 
-    #[Route(path: "/selling-items", name: "frontend.selling-items.index", methods: ["GET"])]
+    #[Route(path: "/dressing-room", name: "frontend.selling-items.index", methods: ["GET"])]
     public function index(Request $request, SalesChannelContext $context): Response
     {
+        // Create criteria for items
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('active', true));
         $criteria->addAssociation('category');
         $criteria->addAssociation('mainImage');
         $criteria->addAssociation('previewImage');
-        $criteria->addSorting(new FieldSorting('createdAt', FieldSorting::DESCENDING));
-
+        
+        // Handle sorting
+        $sort = $request->query->get('sort', 'createdAt');
+        $order = $request->query->get('order', 'desc');
+        
+        if ($sort === 'price') {
+            $criteria->addSorting(new FieldSorting('price', $order === 'desc' ? FieldSorting::DESCENDING : FieldSorting::ASCENDING));
+        } else {
+            $criteria->addSorting(new FieldSorting('createdAt', FieldSorting::DESCENDING));
+        }
+        
+        // Handle category filter
         $categoryId = $request->query->get('category');
         if ($categoryId) {
             $criteria->addFilter(new EqualsFilter('categoryId', $categoryId));
         }
 
+        // Search items
         $items = $this->sellingItemRepository->search($criteria, $context->getContext());
 
-        // Получаем категории для фильтра
+        // Get categories for filter
         $categoryCriteria = new Criteria();
         $categoryCriteria->addFilter(new EqualsFilter('active', true));
         $categoryCriteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
         
         $categories = $this->sellingItemCategoryRepository->search($categoryCriteria, $context->getContext());
 
+        // Get selected item (first item by default)
+        $selectedItem = null;
+        $selectedItemId = $request->query->get('selected');
+        
+        if ($selectedItemId) {
+            $selectedCriteria = new Criteria([$selectedItemId]);
+            $selectedCriteria->addAssociation('mainImage');
+            $selectedResult = $this->sellingItemRepository->search($selectedCriteria, $context->getContext());
+            if ($selectedResult->count() > 0) {
+                $selectedItem = $selectedResult->first();
+            }
+        }
+        
+        // If no selected item, use the first item from results
+        if (!$selectedItem && $items->count() > 0) {
+            $selectedItem = $items->first();
+        }
+
         return $this->renderStorefront('@SellingItems/storefront/page/selling-items/index.html.twig', [
             'items' => $items,
             'categories' => $categories,
-            'selectedCategory' => $categoryId
+            'selectedCategory' => $categoryId,
+            'selectedItem' => $selectedItem
         ]);
     }
 }

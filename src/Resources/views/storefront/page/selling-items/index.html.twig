@@ -16,17 +16,21 @@
                 <div class="character-display">
                     <div class="character-avatar">
                         {% if selectedItem and selectedItem.mainImage %}
-                            <img src="{{ selectedItem.mainImage.url }}" alt="{{ selectedItem.title }}" class="main-character-image">
+                            {# Use Shopware's media URL filter #}
+                            <img src="{{ selectedItem.mainImage|sw_encode_media_url }}" 
+                                 alt="{{ selectedItem.title }}" 
+                                 class="main-character-image">
                         {% else %}
                             <div class="default-character">
-                                <img src="/bundles/storefront/assets/icon/default/avatar.svg" alt="Default Character">
+                                <img src="{{ asset('bundles/storefront/assets/icon/default/avatar.svg') }}" 
+                                     alt="Default Character">
                             </div>
                         {% endif %}
                     </div>
                     
                     {% if selectedItem %}
                         <div class="add-to-cart-section">
-                            <button class="add-to-cart-btn">
+                            <button class="add-to-cart-btn" data-item-id="{{ selectedItem.id }}">
                                 Add to Cart<br>
                                 <span class="price">€{{ selectedItem.price|number_format(2, '.', ',') }}</span>
                             </button>
@@ -44,18 +48,12 @@
 
                 <!-- Category Filter Tabs -->
                 <div class="category-tabs">
-                    {# <div class="tab-filters">
-                        <button class="filter-tab{% if not selectedCategory %} active{% endif %}" 
-                                onclick="filterByCategory(null)">T-mog Name</button>
-                        <button class="filter-tab" onclick="filterByCategory('type')">Type</button>
-                        <button class="filter-tab" onclick="filterByCategory('rarity')">Rarity</button>
-                        <button class="filter-tab sort-btn" onclick="toggleSort()">
-                            Sort by Price <span class="sort-arrow">↓</span>
-                        </button>
-                    </div> #}
-
                     <!-- Category buttons -->
                     <div class="category-buttons">
+                        <button class="category-btn{% if not selectedCategory %} active{% endif %}" 
+                                onclick="filterByCategory(null)">
+                            All
+                        </button>
                         {% if categories.total > 0 %}
                             {% for category in categories %}
                                 <button class="category-btn{% if selectedCategory == category.id %} active{% endif %}" 
@@ -65,7 +63,7 @@
                             {% endfor %}
                         {% endif %}
                         <button class="category-btn sort-btn" onclick="toggleSort()">
-                            Sort by Price <span class="sort-arrow">↓</span>
+                            Sort by Price <span class="sort-arrow">{{ app.request.get('order') == 'desc' ? '↑' : '↓' }}</span>
                         </button>
                     </div>
                 </div>
@@ -73,10 +71,25 @@
                 <!-- Items Grid -->
                 <div class="items-grid">
                     {% for item in items %}
-                        <div class="item-card" data-item-id="{{ item.id }}" onclick="selectItem('{{ item.id }}')">
+                        <div class="item-card{% if selectedItem and selectedItem.id == item.id %} selected{% endif %}" 
+                             data-item-id="{{ item.id }}" 
+                             data-item-title="{{ item.title }}"
+                             data-item-price="{{ item.price }}"
+                             data-main-image="{{ item.mainImage ? item.mainImage|sw_encode_media_url : '' }}"
+                             onclick="selectItem('{{ item.id }}')">
                             <div class="item-image">
                                 {% if item.previewImage %}
-                                    <img src="{{ item.previewImage.url }}" alt="{{ item.title }}">
+                                    <img src="{{ item.previewImage|sw_encode_media_url }}" 
+                                         alt="{{ item.title }}"
+                                         loading="lazy">
+                                {% else %}
+                                    <div class="item-placeholder">
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21 15 16 10 5 21"></polyline>
+                                        </svg>
+                                    </div>
                                 {% endif %}
                             </div>
                             
@@ -89,7 +102,7 @@
                         </div>
                     {% else %}
                         <div class="no-items">
-                            {# <p>No items found.</p> #}
+                            <p>No items found in this category.</p>
                         </div>
                     {% endfor %}
                 </div>
@@ -101,6 +114,7 @@
 <style>
 .dressing-room-page {
     min-height: 100vh;
+    background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
     color: #fff;
     font-family: 'Arial', sans-serif;
     padding: 20px 0;
@@ -156,12 +170,21 @@
     align-items: center;
     justify-content: center;
     border: 2px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
 }
 
 .main-character-image {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+}
+
+.default-character {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .default-character img {
@@ -185,6 +208,7 @@
 .add-to-cart-btn:hover {
     background: #ff3742;
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
 }
 
 .price {
@@ -224,35 +248,6 @@
     margin-bottom: 30px;
 }
 
-.tab-filters {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.filter-tab {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.filter-tab:hover, .filter-tab.active {
-    background: #ff4757;
-    border-color: #ff4757;
-    color: white;
-}
-
-.sort-btn .sort-arrow {
-    margin-left: 5px;
-    font-size: 0.8rem;
-}
-
 .category-buttons {
     display: flex;
     gap: 10px;
@@ -274,6 +269,11 @@
     background: rgba(255, 71, 87, 0.3);
     border-color: #ff4757;
     color: white;
+}
+
+.sort-btn .sort-arrow {
+    margin-left: 5px;
+    font-size: 0.8rem;
 }
 
 /* Items Grid */
@@ -340,6 +340,10 @@
     object-fit: contain;
 }
 
+.item-placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
 .try-on-btn {
     background: #ff4757;
     color: white;
@@ -388,11 +392,6 @@
         font-size: 2rem;
     }
     
-    .tab-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
     .items-grid {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 15px;
@@ -406,8 +405,8 @@
 </style>
 
 <script>
-let selectedItemId = null;
-let currentSort = 'asc';
+let selectedItemId = '{{ selectedItem ? selectedItem.id : '' }}';
+let currentSort = '{{ app.request.get('order', 'asc') }}';
 
 function selectItem(itemId) {
     // Remove previous selection
@@ -421,9 +420,42 @@ function selectItem(itemId) {
         selectedCard.classList.add('selected');
         selectedItemId = itemId;
         
-        // Here you would typically make an AJAX call to get the full item data
-        // and update the character display
-        updateCharacterDisplay(itemId);
+        // Update character display
+        updateCharacterDisplay(selectedCard);
+    }
+}
+
+function updateCharacterDisplay(itemCard) {
+    const mainImage = itemCard.getAttribute('data-main-image');
+    const title = itemCard.getAttribute('data-item-title');
+    const price = itemCard.getAttribute('data-item-price');
+    
+    const characterAvatar = document.querySelector('.character-avatar');
+    const addToCartSection = document.querySelector('.add-to-cart-section');
+    
+    if (mainImage) {
+        characterAvatar.innerHTML = `<img src="${mainImage}" alt="${title}" class="main-character-image">`;
+    } else {
+        characterAvatar.innerHTML = `
+            <div class="default-character">
+                <img src="{{ asset('bundles/storefront/assets/icon/default/avatar.svg') }}" alt="Default Character">
+            </div>`;
+    }
+    
+    // Update or create add to cart button
+    if (!addToCartSection) {
+        const cartHtml = `
+            <div class="add-to-cart-section">
+                <button class="add-to-cart-btn" data-item-id="${itemCard.getAttribute('data-item-id')}">
+                    Add to Cart<br>
+                    <span class="price">€${parseFloat(price).toFixed(2).replace('.', '.').replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
+                </button>
+            </div>`;
+        document.querySelector('.character-display').insertAdjacentHTML('beforeend', cartHtml);
+    } else {
+        const btn = addToCartSection.querySelector('.add-to-cart-btn');
+        btn.setAttribute('data-item-id', itemCard.getAttribute('data-item-id'));
+        btn.querySelector('.price').textContent = `€${parseFloat(price).toFixed(2).replace('.', '.').replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
     }
 }
 
@@ -439,8 +471,6 @@ function filterByCategory(categoryId) {
 
 function toggleSort() {
     currentSort = currentSort === 'asc' ? 'desc' : 'asc';
-    const arrow = document.querySelector('.sort-arrow');
-    arrow.textContent = currentSort === 'asc' ? '↓' : '↑';
     
     let url = new URL(window.location);
     url.searchParams.set('sort', 'price');
@@ -448,19 +478,26 @@ function toggleSort() {
     window.location.href = url.toString();
 }
 
-function updateCharacterDisplay(itemId) {
-    // This would typically fetch item data via AJAX and update the character
-    console.log('Updating character display with item:', itemId);
-}
-
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-select first item if available
-    const firstItem = document.querySelector('.item-card');
-    if (firstItem && !selectedItemId) {
-        const itemId = firstItem.getAttribute('data-item-id');
-        selectItem(itemId);
+    // Auto-select first item if not already selected
+    if (!selectedItemId) {
+        const firstItem = document.querySelector('.item-card');
+        if (firstItem) {
+            const itemId = firstItem.getAttribute('data-item-id');
+            selectItem(itemId);
+        }
     }
+    
+    // Add click handlers for add to cart buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.add-to-cart-btn')) {
+            const btn = e.target.closest('.add-to-cart-btn');
+            const itemId = btn.getAttribute('data-item-id');
+            console.log('Add to cart:', itemId);
+            // Here you would implement the actual add to cart functionality
+        }
+    });
 });
 </script>
 {% endblock %}

@@ -53,12 +53,18 @@
                     <sw-media-upload-v2
                         :label="$tc('selling-items.detail.mainImageLabel')"
                         :source="item.mainImageId"
+                        :fileAccept="'image/*'"
+                        :allowMultiSelect="false"
+                        variant="regular"
                         @media-upload-add-file="item.mainImageId = $event">
                     </sw-media-upload-v2>
 
                     <sw-media-upload-v2
                         :label="$tc('selling-items.detail.previewImageLabel')"
                         :source="item.previewImageId"
+                        :fileAccept="'image/*'"
+                        :allowMultiSelect="false"
+                        variant="regular"
                         @media-upload-add-file="item.previewImageId = $event">
                     </sw-media-upload-v2>
 
