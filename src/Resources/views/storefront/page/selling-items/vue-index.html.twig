@@ -1,0 +1,754 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_content %}
+<div id="app"></div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #1a1a1a;
+        color: #fff;
+        font-family: Arial, sans-serif;
+    }
+
+    .dressing-room-app {
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .welcome-header h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #fff;
+        margin: 0;
+    }
+
+    .highlight {
+        color: #ff4757;
+    }
+
+    .content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* Character Section */
+    .character-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+        color: #ddd;
+    }
+
+    .character-display {
+        text-align: center;
+    }
+
+    .character-avatar {
+        width: 300px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        margin: 0 auto 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+    }
+
+    .main-character-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .default-character {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .add-to-cart-btn {
+        background: #ff4757;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .add-to-cart-btn:hover {
+        background: #ff3742;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    .price {
+        font-size: 1.2rem;
+        display: block;
+        margin-top: 5px;
+    }
+
+    /* Wardrobe Section */
+    .wardrobe-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+    }
+
+    .wardrobe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .wardrobe-label, .catalog-label {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .catalog-label {
+        color: #ff4757;
+    }
+
+    /* Search Bar */
+    .search-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #ff4757;
+    }
+
+    .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-btn {
+        background: #ff4757;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-btn:hover {
+        background: #ff3742;
+        transform: translateY(-2px);
+    }
+
+    /* Category Tabs */
+    .category-tabs {
+        margin-bottom: 30px;
+    }
+
+    .category-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .category-btn {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ddd;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background: rgba(255, 71, 87, 0.3);
+        border-color: #ff4757;
+        color: white;
+    }
+
+    .sort-arrow {
+        margin-left: 5px;
+        font-size: 0.8rem;
+    }
+
+    /* Items Grid */
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+        position: relative;
+    }
+
+    .items-grid::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .items-grid::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+
+    .items-grid::-webkit-scrollbar-thumb {
+        background: #ff4757;
+        border-radius: 4px;
+    }
+
+    .item-card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 15px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+    }
+
+    .item-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 71, 87, 0.5);
+    }
+
+    .item-card.selected {
+        border-color: #ff4757;
+        background: rgba(255, 71, 87, 0.2);
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .item-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .item-placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .try-on-btn {
+        background: #ff4757;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .try-on-btn:hover {
+        background: #ff3742;
+    }
+
+    .item-price {
+        font-size: 0.9rem;
+        display: block;
+        margin-top: 3px;
+    }
+
+    .no-items {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: #999;
+        padding: 40px;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+    }
+
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top: 3px solid #ff4757;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .page-btn {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ddd;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        min-width: 35px;
+    }
+
+    .page-btn:hover {
+        background: rgba(255, 71, 87, 0.3);
+        border-color: #ff4757;
+        color: white;
+    }
+
+    .page-btn.active {
+        background: #ff4757;
+        border-color: #ff4757;
+        color: white;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .page-info {
+        color: #ddd;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .content-wrapper {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .character-avatar {
+            width: 250px;
+            height: 320px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .welcome-header h1 {
+            font-size: 2rem;
+        }
+        
+        .items-grid {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        
+        .character-avatar {
+            width: 200px;
+            height: 250px;
+        }
+    }
+
+    /* Fade transition */
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.3s;
+    }
+    .fade-enter-from, .fade-leave-to {
+        opacity: 0;
+    }
+</style>
+
+<script>
+    const { createApp, ref, computed, onMounted, watch } = Vue;
+
+    createApp({
+        setup() {
+            // State
+            const items = ref([]);
+            const categories = ref([]);
+            const selectedItem = ref(null);
+            const selectedCategory = ref(null);
+            const searchTerm = ref('');
+            const sortBy = ref('createdAt');
+            const sortOrder = ref('desc');
+            const currentPage = ref(1);
+            const itemsPerPage = ref(24);
+            const totalItems = ref(0);
+            const totalPages = ref(0);
+            const isLoading = ref(false);
+            const searchTimeout = ref(null);
+
+            // Computed
+            const formattedPrice = (price) => {
+                return new Intl.NumberFormat('de-DE', {
+                    style: 'currency',
+                    currency: 'EUR'
+                }).format(price || 0);
+            };
+
+            const paginationRange = computed(() => {
+                const range = [];
+                const maxVisible = 5;
+                let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2));
+                let end = Math.min(totalPages.value, start + maxVisible - 1);
+                
+                if (end - start + 1 < maxVisible) {
+                    start = Math.max(1, end - maxVisible + 1);
+                }
+                
+                for (let i = start; i <= end; i++) {
+                    range.push(i);
+                }
+                
+                return range;
+            });
+
+            // Methods
+            const fetchCategories = async () => {
+                try {
+                    const response = await axios.get('/api/selling-items/categories');
+                    categories.value = response.data.categories;
+                } catch (error) {
+                    console.error('Error fetching categories:', error);
+                }
+            };
+
+            const fetchItems = async () => {
+                isLoading.value = true;
+                try {
+                    const params = {
+                        page: currentPage.value,
+                        limit: itemsPerPage.value,
+                        sort: sortBy.value,
+                        order: sortOrder.value
+                    };
+
+                    if (searchTerm.value) {
+                        params.search = searchTerm.value;
+                    }
+
+                    if (selectedCategory.value) {
+                        params.category = selectedCategory.value;
+                    }
+
+                    const response = await axios.get('/api/selling-items', { params });
+                    items.value = response.data.items;
+                    totalItems.value = response.data.total;
+                    totalPages.value = response.data.pages;
+
+                    // Auto-select first item if none selected
+                    if (!selectedItem.value && items.value.length > 0) {
+                        selectItem(items.value[0]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching items:', error);
+                } finally {
+                    isLoading.value = false;
+                }
+            };
+
+            const selectItem = (item) => {
+                selectedItem.value = item;
+            };
+
+            const filterByCategory = (categoryId) => {
+                selectedCategory.value = categoryId;
+                currentPage.value = 1;
+                fetchItems();
+            };
+
+            const toggleSort = () => {
+                if (sortBy.value === 'price') {
+                    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortBy.value = 'price';
+                    sortOrder.value = 'asc';
+                }
+                currentPage.value = 1;
+                fetchItems();
+            };
+
+            const performSearch = () => {
+                currentPage.value = 1;
+                fetchItems();
+            };
+
+            const debouncedSearch = () => {
+                clearTimeout(searchTimeout.value);
+                searchTimeout.value = setTimeout(performSearch, 500);
+            };
+
+            const goToPage = (page) => {
+                if (page >= 1 && page <= totalPages.value) {
+                    currentPage.value = page;
+                    fetchItems();
+                }
+            };
+
+            const addToCart = async () => {
+                if (!selectedItem.value) return;
+                
+                // Here you would implement the actual add to cart functionality
+                console.log('Add to cart:', selectedItem.value.id);
+                alert(`Added ${selectedItem.value.title} to cart!`);
+            };
+
+            // Lifecycle
+            onMounted(async () => {
+                await fetchCategories();
+                await fetchItems();
+            });
+
+            // Watch search term for live search
+            watch(searchTerm, debouncedSearch);
+
+            return {
+                items,
+                categories,
+                selectedItem,
+                selectedCategory,
+                searchTerm,
+                sortBy,
+                sortOrder,
+                currentPage,
+                totalPages,
+                isLoading,
+                paginationRange,
+                formattedPrice,
+                selectItem,
+                filterByCategory,
+                toggleSort,
+                performSearch,
+                goToPage,
+                addToCart
+            };
+        },
+        template: `
+            <div class="dressing-room-app">
+                <div class="container">
+                    <!-- Welcome Header -->
+                    <div class="welcome-header">
+                        <h1>Welcome in <span class="highlight">Dressing Room</span></h1>
+                    </div>
+
+                    <div class="content-wrapper">
+                        <!-- Character Section -->
+                        <div class="character-section">
+                            <h2>Your Character</h2>
+                            
+                            <div class="character-display">
+                                <div class="character-avatar">
+                                    <transition name="fade" mode="out-in">
+                                        <img v-if="selectedItem && selectedItem.mainImage"
+                                             :key="selectedItem.id"
+                                             :src="selectedItem.mainImage"
+                                             :alt="selectedItem.title"
+                                             class="main-character-image">
+                                        <div v-else class="default-character">
+                                            <svg width="150" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                        </div>
+                                    </transition>
+                                </div>
+                                
+                                <div v-if="selectedItem" class="add-to-cart-section">
+                                    <button class="add-to-cart-btn" @click="addToCart">
+                                        Add to Cart<br>
+                                        <span class="price">{{ formattedPrice(selectedItem.price) }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wardrobe Section -->
+                        <div class="wardrobe-section">
+                            <div class="wardrobe-header">
+                                <span class="wardrobe-label">Wardrobe</span>
+                                <span class="catalog-label">Catalog</span>
+                            </div>
+
+                            <!-- Search Bar -->
+                            <div class="search-bar">
+                                <input type="text"
+                                       v-model="searchTerm"
+                                       class="search-input"
+                                       placeholder="Search items..."
+                                       @keypress.enter="performSearch">
+                                <button class="search-btn" @click="performSearch">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Category Tabs -->
+                            <div class="category-tabs">
+                                <div class="category-buttons">
+                                    <button class="category-btn"
+                                            :class="{ active: !selectedCategory }"
+                                            @click="filterByCategory(null)">
+                                        All
+                                    </button>
+                                    <button v-for="category in categories"
+                                            :key="category.id"
+                                            class="category-btn"
+                                            :class="{ active: selectedCategory === category.id }"
+                                            @click="filterByCategory(category.id)">
+                                        {{ category.name }}
+                                    </button>
+                                    <button class="category-btn sort-btn" @click="toggleSort">
+                                        Sort by Price <span class="sort-arrow">{{ sortOrder === 'desc' ? '↓' : '↑' }}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Items Grid -->
+                            <div class="items-grid">
+                                <div v-if="isLoading" class="loading-spinner">
+                                    <div class="spinner"></div>
+                                </div>
+                                <template v-else>
+                                    <div v-for="item in items"
+                                         :key="item.id"
+                                         class="item-card"
+                                         :class="{ selected: selectedItem && selectedItem.id === item.id }"
+                                         @click="selectItem(item)">
+                                        <div class="item-image">
+                                            <img v-if="item.previewImage"
+                                                 :src="item.previewImage"
+                                                 :alt="item.title"
+                                                 loading="lazy">
+                                            <div v-else class="item-placeholder">
+                                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item-actions">
+                                            <button class="try-on-btn">
+                                                Try it on<br>
+                                                <span class="item-price">{{ formattedPrice(item.price) }}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div v-if="items.length === 0" class="no-items">
+                                        <p>No items found.</p>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div v-if="totalPages > 1" class="pagination">
+                                <button class="page-btn"
+                                        :disabled="currentPage === 1"
+                                        @click="goToPage(1)">
+                                    «
+                                </button>
+                                <button class="page-btn"
+                                        :disabled="currentPage === 1"
+                                        @click="goToPage(currentPage - 1)">
+                                    ‹
+                                </button>
+                                
+                                <button v-for="page in paginationRange"
+                                        :key="page"
+                                        class="page-btn"
+                                        :class="{ active: page === currentPage }"
+                                        @click="goToPage(page)">
+                                    {{ page }}
+                                </button>
+                                
+                                <button class="page-btn"
+                                        :disabled="currentPage === totalPages"
+                                        @click="goToPage(currentPage + 1)">
+                                    ›
+                                </button>
+                                <button class="page-btn"
+                                        :disabled="currentPage === totalPages"
+                                        @click="goToPage(totalPages)">
+                                    »
+                                </button>
+                                
+                                <span class="page-info">
+                                    Page {{ currentPage }} of {{ totalPages }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    }).mount('#app');
+</script>
+{% endblock %}
