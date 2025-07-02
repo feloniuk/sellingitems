@@ -4,6 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Entity Definitions -->
         <service id="SellingItems\Core\Content\SellingItem\SellingItemDefinition">
             <tag name="shopware.entity.definition" entity="selling_item" />
         </service>
@@ -12,6 +13,7 @@
             <tag name="shopware.entity.definition" entity="selling_item_category" />
         </service>
 
+        <!-- Controllers -->
         <service id="SellingItems\Storefront\Controller\SellingItemsController" public="true">
             <argument type="service" id="selling_item.repository"/>
             <argument type="service" id="selling_item_category.repository"/>
@@ -34,6 +36,14 @@
             <call method="setTwig">
                 <argument type="service" id="twig"/>
             </call>
+        </service>
+
+        <!-- Event Subscriber для автообновления JSON -->
+        <service id="SellingItems\Subscriber\SellingItemsJsonUpdateSubscriber">
+            <argument type="service" id="selling_item.repository"/>
+            <argument type="service" id="selling_item_category.repository"/>
+            <argument type="service" id="sales_channel.repository"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
     </services>
 </container>
