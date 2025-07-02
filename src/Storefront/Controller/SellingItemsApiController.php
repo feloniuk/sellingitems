@@ -29,7 +29,7 @@ class SellingItemsApiController extends StorefrontController
         $this->sellingItemCategoryRepository = $sellingItemCategoryRepository;
     }
 
-    #[Route(path: "/api/selling-items", name: "frontend.api.selling-items.list", methods: ["GET"], options: ["seo" => false])]
+    #[Route(path: "/selling-items/api/items", name: "frontend.selling-items.api.items", methods: ["GET"], options: ["seo" => false])]
     public function getItems(Request $request, SalesChannelContext $context): JsonResponse
     {
         $criteria = new Criteria();
@@ -40,13 +40,11 @@ class SellingItemsApiController extends StorefrontController
         $criteria->addAssociation('mainImage');
         $criteria->addAssociation('previewImage');
         
-        // Add media associations
+        // Add media associations with thumbnails
         $criteria->getAssociation('mainImage')
-            ->addAssociation('mediaFolder')
             ->addAssociation('thumbnails');
             
         $criteria->getAssociation('previewImage')
-            ->addAssociation('mediaFolder')
             ->addAssociation('thumbnails');
 
         // Handle search
@@ -102,7 +100,7 @@ class SellingItemsApiController extends StorefrontController
         ]);
     }
 
-    #[Route(path: "/api/selling-items/categories", name: "frontend.api.selling-items.categories", methods: ["GET"], options: ["seo" => false])]
+    #[Route(path: "/selling-items/api/categories", name: "frontend.selling-items.api.categories", methods: ["GET"], options: ["seo" => false])]
     public function getCategories(Request $request, SalesChannelContext $context): JsonResponse
     {
         $criteria = new Criteria();
@@ -125,7 +123,7 @@ class SellingItemsApiController extends StorefrontController
         ]);
     }
 
-    #[Route(path: "/api/selling-items/{itemId}", name: "frontend.api.selling-items.detail", methods: ["GET"], options: ["seo" => false])]
+    #[Route(path: "/selling-items/api/item/{itemId}", name: "frontend.selling-items.api.item", methods: ["GET"], options: ["seo" => false])]
     public function getItem(string $itemId, Request $request, SalesChannelContext $context): JsonResponse
     {
         $criteria = new Criteria([$itemId]);
@@ -135,11 +133,9 @@ class SellingItemsApiController extends StorefrontController
         
         // Add media associations
         $criteria->getAssociation('mainImage')
-            ->addAssociation('mediaFolder')
             ->addAssociation('thumbnails');
             
         $criteria->getAssociation('previewImage')
-            ->addAssociation('mediaFolder')
             ->addAssociation('thumbnails');
 
         $item = $this->sellingItemRepository->search($criteria, $context->getContext())->first();
@@ -157,11 +153,25 @@ class SellingItemsApiController extends StorefrontController
         $previewImageUrl = '';
 
         if ($item->getMainImage()) {
-            $mainImageUrl = $item->getMainImage()->getUrl() ?: '';
+            $media = $item->getMainImage();
+            // Get the URL from media entity
+            if (method_exists($media, 'getUrl')) {
+                $mainImageUrl = $media->getUrl();
+            } else {
+                // Fallback: construct URL manually
+                $mainImageUrl = '/media/' . $media->getPath();
+            }
         }
 
         if ($item->getPreviewImage()) {
-            $previewImageUrl = $item->getPreviewImage()->getUrl() ?: '';
+            $media = $item->getPreviewImage();
+            // Get the URL from media entity
+            if (method_exists($media, 'getUrl')) {
+                $previewImageUrl = $media->getUrl();
+            } else {
+                // Fallback: construct URL manually
+                $previewImageUrl = '/media/' . $media->getPath();
+            }
         }
 
         return [
